@@ -1,0 +1,31 @@
+/* header.component.css */
+.header-container {
+  background-color: #cce0ff; /* Color pasteal azul suave */
+  padding: 15px;
+  display: flex;
+}
+
+.header-content {
+  display: flex; /* Hacemos que los elementos internos se distribuyan en línea */
+  align-items: center; /* Centramos verticalmente los elementos internos */
+  width: 100%; /* Asegurarse de que el contenido ocupe todo el ancho disponible */
+  margin-left: 32%;
+  justify-content: space-between; /* Alinear el contenido horizontalmente a los extremos */
+}
+
+.header-links {
+  display: flex;
+  gap: 75px; /* Espacio aumentado entre los elementos de los enlaces */
+}
+
+.header-links a {
+  text-decoration: none;
+  color: #333; /* Color del texto de los enlaces */
+  font-weight: bold;
+  font-size: 20px; /* Tamaño del texto aumentado */
+  padding: 10px; /* Espacio para aumentar el tamaño de los enlaces */
+}
+
+.header-links a:hover {
+  color: #0066cc; /* Color del texto de los enlaces al pasar el cursor sobre ellos */
+}
