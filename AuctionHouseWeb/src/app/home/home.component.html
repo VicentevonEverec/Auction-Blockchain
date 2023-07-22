@@ -1,10 +1,83 @@
-<!-- home.component.html -->
 <app-header></app-header>
 
-<div>
-  <!-- Aquí coloca el contenido específico de la página de inicio (contenido de subastas, lista de artículos, etc.) -->
-  <h2>Bienvenido a las Subastas</h2>
-  <!-- Otros elementos de la página de inicio -->
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="sticky">
+      <!-- Barra lateral desplegable con lista de objetos -->
+      <mat-drawer-container class="example-container" >
+        
+        <mat-drawer #drawer class="example-sidenav" mode="side">
+
+          <p>Auto-resizing sidenav</p>
+
+          <p *ngIf="showFiller">Lorem, ipsum dolor sit amet consectetur.</p>
+
+          <button (click)="showFiller = !showFiller" mat-raised-button>
+            Toggle extra text
+          </button>
+
+        </mat-drawer> 
+      
+        <div class="example-sidenav-content">
+          <button type="button" mat-button (click)="drawer.toggle()">
+            >
+          </button>
+        </div>
+      
+      </mat-drawer-container>
+    </div>
+  </div>
+  
+  <div class="row2">
+    <!-- Carrusel de imágenes en formato horizontal -->
+    <div>
+      <div class="carousel-container">
+        <carousel>
+          <div *ngFor="let image of carouselImages">
+            <slide>
+              <img [src]="image.src" [alt]="image.alt" class="imagenes">
+            </slide>
+          </div>
+        </carousel>
+
+        <carousel>
+          <div *ngFor="let image of carouselImages">
+            <slide>
+              <img [src]="image.src" [alt]="image.alt" class="imagenes">
+            </slide>
+          </div>
+        </carousel>
+
+        <carousel>
+          <div *ngFor="let image of carouselImages">
+            <slide>
+              <img [src]="image.src" [alt]="image.alt" class="imagenes">
+            </slide>
+          </div>
+        </carousel>
+
+        <carousel>
+          <div *ngFor="let image of carouselImages">
+            <slide>
+              <img [src]="image.src" [alt]="image.alt" class="imagenes">
+            </slide>
+          </div>
+        </carousel>
+
+        <carousel>
+          <div *ngFor="let image of carouselImages">
+            <slide>
+              <img [src]="image.src" [alt]="image.alt" class="imagenes">
+            </slide>
+          </div>
+        </carousel>
+
+      </div>
+    </div>
+
+
+  </div>
 </div>
 
 <app-footer></app-footer>

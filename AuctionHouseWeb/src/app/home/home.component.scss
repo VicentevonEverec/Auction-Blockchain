@@ -1,0 +1,39 @@
+/* Estilo para el contenedor principal */
+.container-fluid {
+  padding: 15px;
+  position: relative;
+
+}
+
+.carousel-container {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Estilo para las imágenes del carrusel */
+.imagenes {
+  max-width: 100%; /* Establecer el ancho máximo para las imágenes (ajusta este valor según tus necesidades) */
+  height: auto; /* Mantener la altura automática para conservar la proporción */
+  object-fit: cover; /* Ajustar la imagen para que cubra completamente el contenedor sin distorsionarse */
+}
+
+.carousel-inner img:last-child {
+  margin-right: 0; /* Eliminar el margen del último elemento para que no haya espacio extra */
+}
+
+.row{
+  position: sticky;
+  top: 15px;
+  .sticky {
+    position: absolute;
+    height: 100vh; /* Ajusta esto según la altura deseada */
+    overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es más grande que la altura */
+  }
+}
+
+.row2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
