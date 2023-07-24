@@ -1,24 +1,6 @@
-/* Estilo para el contenedor principal */
 .container-fluid {
-  padding: 15px;
+  padding: 30px;
   position: relative;
-
-}
-
-.carousel-container {
-  max-width: 100%;
-  width: 100%;
-}
-
-/* Estilo para las imágenes del carrusel */
-.imagenes {
-  max-width: 100%; /* Establecer el ancho máximo para las imágenes (ajusta este valor según tus necesidades) */
-  height: auto; /* Mantener la altura automática para conservar la proporción */
-  object-fit: cover; /* Ajustar la imagen para que cubra completamente el contenedor sin distorsionarse */
-}
-
-.carousel-inner img:last-child {
-  margin-right: 0; /* Eliminar el margen del último elemento para que no haya espacio extra */
 }
 
 .row{
@@ -26,14 +8,29 @@
   top: 15px;
   .sticky {
     position: absolute;
-    height: 100vh; /* Ajusta esto según la altura deseada */
+    height: 80vh; /* Ajusta esto según la altura deseada */
     overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es más grande que la altura */
   }
 }
 
-.row2 {
-  display: flex;
-  justify-content: center;
+.row2, .row3, .row4, .row5 {
+  justify-content: flex-end; // Alinea los elementos a la derecha
+  margin-right: 75px;
   align-items: center;
+  width: 75%;
+  margin-left: auto; // Para que el margen izquierdo sea automático y se ajuste a la derecha
+  margin-bottom: 50px;
 }
 
+.carousel-caption {
+  background-color: rgba(128, 128, 128, 0.7); // Fondo grisáceo transparente (puedes ajustar el valor alpha para la transparencia)
+  color: #fff; // Color del texto dentro del caption (puedes ajustarlo según tus necesidades)
+  position: absolute; // Posición absoluta para que se superponga a la imagen
+  bottom: 0; // Lo posiciona en la parte inferior del carousel
+  left: 0; // Lo posiciona a la izquierda del carousel
+  right: 0; // Lo posiciona a la derecha del carousel
+  padding: 10px; // Espacio interno dentro del caption (puedes ajustar el valor según tus necesidades)
+  width: 100%; // Ancho del caption (puedes ajustar el porcentaje según tus necesidades)
+  margin: 0 auto; // Centra horizontalmente el caption
+  text-align: center; // Alinea el contenido del caption al centro
+}

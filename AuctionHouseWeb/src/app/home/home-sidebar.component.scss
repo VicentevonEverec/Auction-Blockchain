@@ -1,12 +1,13 @@
 /* Estilos generales para el contenedor */
 .example-container {
     display: grid;
-    height: 95vh; /* Altura del contenedor */
+    height: 80vh; /* Altura del contenedor */
   }
   
   /* Estilos para el sidebar replegado */
   .example-sidenav {
     width: 60px; /* Ancho del sidebar cuando está replegado */
+    height: 85vh;
     transition: width 0.3s; /* Transición suave para cambiar el ancho */
   }
   
