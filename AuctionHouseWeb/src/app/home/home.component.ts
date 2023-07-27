@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
+import { ScrollService } from './scroll.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss', './home-news.component.scss']
 })
-export class HomeComponent 
+export class HomeComponent
 {
   itemsPerSlide = 4;
   singleSlideOffset = false;
@@ -34,4 +36,25 @@ export class HomeComponent
 
   showFiller = false;
 
+
+  private subscription: Subscription | undefined;
+
+  constructor(private scrollService: ScrollService) {
+    this.subscription = this.scrollService.getSectionId().subscribe((sectionId: string) => {
+      this.scrollToSection(sectionId);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  scrollToSection(sectionId: string): void {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 }

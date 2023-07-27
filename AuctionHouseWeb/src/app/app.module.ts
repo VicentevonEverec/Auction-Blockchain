@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule for ngModel
 
 import { SearchFilterComponent } from './search-filter/search-filter.component';
 import { UserHeaderComponent } from './user-header/user-header.component';
+import { ScrollService } from './home/scroll.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { UserHeaderComponent } from './user-header/user-header.component';
     LogoComponent,
     HomeComponent,
     SearchFilterComponent,
-    UserHeaderComponent
+    UserHeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,7 +38,7 @@ import { UserHeaderComponent } from './user-header/user-header.component';
     MatSidenavModule,
     FormsModule
   ],
-  providers: [],
+  providers: [ScrollService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
