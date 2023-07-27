@@ -3,17 +3,8 @@
   position: relative;
 }
 
-.row{
-  position: sticky;
-  top: 15px;
-  .sticky {
-    position: absolute;
-    height: 80vh; /* Ajusta esto según la altura deseada */
-    overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es más grande que la altura */
-  }
-}
-
-.row2, .row3, .row4, .row5 {
+.row {
+  margin-top: 50px;
   justify-content: flex-end; // Alinea los elementos a la derecha
   margin-right: 75px;
   align-items: center;

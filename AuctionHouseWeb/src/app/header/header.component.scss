@@ -2,24 +2,20 @@
 
 .header-container {
   background-color: rgba(0, 0, 0, 0.8); /* Fondo negro semitransparente */
-  padding: 20px; /* Reducimos el espaciado interno para un aspecto más limpio */
+  padding: 10px; /* Reducimos el espaciado interno para un aspecto más limpio */
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: sticky;
   top: 0;
-  z-index: 4;
 }
 
 .header-content {
   display: flex;
   align-items: center;
   width: 100%;
-  margin: 0 auto; /* Centramos el contenido horizontalmente */
-  max-width: 1200px; /* Establecemos un ancho máximo para el contenido */
   justify-content: space-between;
-  margin-left: 32%;
 }
 
 .header-links {
@@ -40,21 +36,4 @@
 .header-links a:hover {
   color: #66c2ff; /* Color del texto de los enlaces al pasar el cursor sobre ellos */
   background-color: rgba(255, 255, 255, 0.1); /* Fondo blanco semitransparente al pasar el cursor */
-}
-
-/* Otras reglas para mejorar la legibilidad y diseño general */
-.header-logo {
-  font-size: 24px;
-  color: #fff;
-  text-decoration: none;
-  margin-right: 20px;
-}
-
-.header-logo:hover {
-  color: #66c2ff;
-}
-
-.header-subtitle {
-  color: #ccc; /* Color del subtítulo */
-  font-size: 14px;
 }

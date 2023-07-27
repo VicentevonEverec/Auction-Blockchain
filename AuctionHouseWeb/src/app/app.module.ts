@@ -11,9 +11,12 @@ import { FooterComponent } from './footer/footer.component';
 import { LogoComponent } from './logo/logo.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatButtonModule} from '@angular/material/button';
-import {NgIf} from '@angular/common';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { FormsModule } from '@angular/forms'; // Import FormsModule for ngModel
+
+import { SearchFilterComponent } from './search-filter/search-filter.component';
+import { UserHeaderComponent } from './user-header/user-header.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +24,9 @@ import {MatSidenavModule} from '@angular/material/sidenav';
     HeaderComponent,
     FooterComponent,
     LogoComponent,
-    HomeComponent
+    HomeComponent,
+    SearchFilterComponent,
+    UserHeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +35,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
     BrowserAnimationsModule,
     MatButtonModule,
     MatSidenavModule,
-    NgIf
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

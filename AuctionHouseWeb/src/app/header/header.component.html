@@ -1,22 +1,25 @@
 <!-- header.component.html -->
 <header class="header-container">
     <div class="header-content">
-  
+      
+      <div class="logo">
+        <app-logo></app-logo>
+      </div>
+
       <!-- Contenedor del logo y los enlaces -->
       <div class="logo-links-container">
         <!-- Apartados para clickear que representan las secciones de una página web de subastas -->
         <div class="header-links">
           <a routerLink="/">Inicio</a>
           <a routerLink="/subastas">Subastas</a>
-          <a routerLink="/productos">Mis artículos</a>
-          <a routerLink="/mi-cuenta">Mi perfil</a>
+          <a routerLink="/productos">Subastas privadas</a>
+          <a routerLink="/mi-cuenta">Noticias</a>
         </div>
       </div>
-  
-      <div class="logo">
-        <app-logo></app-logo>
+      
+      <div class="header-search">
+        <app-search-filter></app-search-filter>
       </div>
-  
     </div>
   </header>
   

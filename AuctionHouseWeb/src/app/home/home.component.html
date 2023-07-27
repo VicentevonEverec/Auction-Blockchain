@@ -1,47 +1,13 @@
-<app-header></app-header>
+<!DOCTYPE html>
+<html lang="es">
 
-<div class="container-fluid">
+<body>
+
+  <app-user-header></app-user-header>
+
+  <app-header></app-header>
 
   <div class="row">
-    <div class="sticky">
-      <!-- Barra lateral desplegable con lista de objetos -->
-      <mat-drawer-container class="example-container" >
-        
-        <mat-drawer #drawer class="example-sidenav" mode="side">
-
-          <h1>Artículos Populares en Subastas</h1>
-          <ul>
-              <li><a href="#">Obras de arte y pinturas de artistas famosos</a></li>
-              <li><a href="#">Joyas y diamantes de alta calidad</a></li>
-              <li><a href="#">Relojes de lujo y relojes vintage</a></li>
-              <li><a href="#">Antigüedades y objetos coleccionables</a></li>
-              <li><a href="#">Automóviles y vehículos de colección</a></li>
-              <li><a href="#">Vinos y licores finos</a></li>
-              <li><a href="#">Muebles y objetos de diseño exclusivo</a></li>
-              <li><a href="#">Libros raros y manuscritos históricos</a></li>
-              <li><a href="#">Monedas y billetes de colección</a></li>
-              <li><a href="#">Memorabilia y objetos relacionados con celebridades</a></li>
-          </ul>
-
-          <p *ngIf="showFiller">Lorem, ipsum dolor sit amet consectetur.</p>
-
-          <button (click)="showFiller = !showFiller" mat-raised-button>
-            Toggle extra text
-          </button>
-
-        </mat-drawer> 
-      
-        <div class="example-sidenav-content">
-          <button type="button" mat-button (click)="drawer.toggle()">
-            >
-          </button>
-        </div>
-      
-      </mat-drawer-container>
-    </div>
-  </div>
-  
-  <div class="row2">
     <!-- Carrusel de imágenes en formato horizontal -->
 
     <carousel [isAnimated]="true" [itemsPerSlide]="itemsPerSlide"
@@ -61,67 +27,8 @@
     </carousel>
   </div>
 
-  <div class="row3">
-    <!-- Carrusel de imágenes en formato horizontal -->
+  <app-footer></app-footer>
+</body>
 
-    <carousel [isAnimated]="true" [itemsPerSlide]="itemsPerSlide"
-    [singleSlideOffset]="singleSlideOffset"
-    [interval]="0"
-    [startFromIndex]="1">
+</html>
 
-      <slide *ngFor="let slide of slides">
-        <img [src]="slide.image" alt="image slide" style="display: inline-block; width: 100%;">
-        
-        <div class="carousel-caption">
-          <h4>Nombre de producto {{slide.alt}}</h4>
-        </div>
-
-      </slide>
-
-    </carousel>
-  </div>
-
-  <div class="row4">
-    <!-- Carrusel de imágenes en formato horizontal -->
-
-    <carousel [isAnimated]="true" [itemsPerSlide]="itemsPerSlide"
-    [singleSlideOffset]="singleSlideOffset"
-    [interval]="0"
-    [startFromIndex]="1">
-
-      <slide *ngFor="let slide of slides">
-        <img [src]="slide.image" alt="image slide" style="display: inline-block; width: 100%;">
-        
-        <div class="carousel-caption">
-          <h4>Nombre de producto {{slide.alt}}</h4>
-        </div>
-
-      </slide>
-
-    </carousel>
-  </div>
-
-  <div class="row5">
-    <!-- Carrusel de imágenes en formato horizontal -->
-
-    <carousel [isAnimated]="true" [itemsPerSlide]="itemsPerSlide"
-    [singleSlideOffset]="singleSlideOffset"
-    [interval]="0"
-    [startFromIndex]="1">
-
-      <slide *ngFor="let slide of slides">
-        <img [src]="slide.image" alt="image slide" style="display: inline-block; width: 100%;">
-        
-        <div class="carousel-caption">
-          <h4>Nombre de producto {{slide.alt}}</h4>
-        </div>
-
-      </slide>
-
-    </carousel>
-  </div>
-
-
-</div>
-
-<app-footer></app-footer>
