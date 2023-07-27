@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { ScrollService } from './scroll.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -35,26 +33,4 @@ export class HomeComponent
   noticia4 = { image: 'https://picsum.photos/id/134/600/400', alt: 'Noticias' };
 
   showFiller = false;
-
-
-  private subscription: Subscription | undefined;
-
-  constructor(private scrollService: ScrollService) {
-    this.subscription = this.scrollService.getSectionId().subscribe((sectionId: string) => {
-      this.scrollToSection(sectionId);
-    });
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  scrollToSection(sectionId: string): void {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
 }
