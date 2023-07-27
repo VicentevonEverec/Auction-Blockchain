@@ -2,15 +2,12 @@
 footer {
   background-color: rgba(0, 0, 0, 0.8); /* Fondo negro semitransparente */
   padding: 20px; /* Reducimos el espaciado interno para un aspecto más limpio */
-  position: fixed;
   bottom: 0;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
-/* Resto del código del footer se mantiene igual */
 
 .social-media a {
   margin: 0 30px; /* Reducimos el espaciado horizontal entre las imágenes */

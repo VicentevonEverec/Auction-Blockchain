@@ -1,5 +1,3 @@
-/* header.component.scss */
-
 .header-container {
   background-color: rgba(0, 0, 0, 0.8); /* Fondo negro semitransparente */
   padding: 10px; /* Reducimos el espaciado interno para un aspecto más limpio */
@@ -7,8 +5,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  
   position: sticky;
   top: 0;
+
+  z-index: 10;
 }
 
 .header-content {
