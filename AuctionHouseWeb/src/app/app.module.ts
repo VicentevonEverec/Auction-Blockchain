@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule for ngModel
 import { SearchFilterComponent } from './search-filter/search-filter.component';
 import { UserHeaderComponent } from './user-header/user-header.component';
 import { ScrollService } from './home/scroll.service';
+import { HowToSellComponent } from './how-to-sell/how-to-sell.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ScrollService } from './home/scroll.service';
     HomeComponent,
     SearchFilterComponent,
     UserHeaderComponent,
+    HowToSellComponent,
   ],
   imports: [
     BrowserModule,
