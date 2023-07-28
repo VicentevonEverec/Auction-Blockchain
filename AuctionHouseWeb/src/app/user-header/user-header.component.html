@@ -1,6 +1,8 @@
 <div class="user-header-container">
-    <button (click)="onLogin()">Iniciar sesión</button>
-    <button (click)="onRegister()">Registrarse</button>
+    <button *ngIf="stateService.getAccount() == ''" (click)="onLogin()">Iniciar sesión</button>
+    <button *ngIf="stateService.getAccount() != ''"> {{ stateService.getAccount() }} </button>
+    <button *ngIf="stateService.getAccount() != ''" (click)="onLogout()">Cerrar sesión</button>
+    <button *ngIf="stateService.getAccount() == ''" (click)="onRegister()">Registrarse</button>
     <button (click)="onHowToSell()">¿Cómo vender?</button>
 </div>
   

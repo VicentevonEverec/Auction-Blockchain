@@ -13,7 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { FormsModule } from '@angular/forms'; // Import FormsModule for ngModel
+import { FormsModule } from '@angular/forms';
 
 import { SearchFilterComponent } from './search-filter/search-filter.component';
 import { UserHeaderComponent } from './user-header/user-header.component';
