@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -7,7 +8,8 @@ import { Component } from '@angular/core';
 })
 export class RegisterComponent 
 {
-  constructor() {
+  
+  constructor(private http: HttpClient) {
     window.alert("Privacidad y Protección de Datos: En Auction Blockchain, valoramos y respetamos tu privacidad. \n\
     Todos los datos personales que proporcionas al registrarte en nuestro sitio serán tratados con la máxima confidencialidad y \n\
     solo serán utilizados por el equipo de administración de la página de subastas con el único propósito de prevenir fraudes y garantizar la integridad de nuestras transacciones. \n\
@@ -30,7 +32,19 @@ export class RegisterComponent
 
   onRegister(): void
   {
-    window.open("https://metamask.io/", "_blank");
+    console.log('Registro', this.userData);
+
+    this.http.post('/api/register', this.userData)
+    .subscribe({
+      next: response => {
+        console.log('Registro exitoso', response);
+        
+      },
+      error: error => {
+        console.error('Error en el registro', error);
+        // Maneja el error de registro aquí
+      }
+    });
   }
 
 }
