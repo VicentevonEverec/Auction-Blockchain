@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
+
 export class RegisterComponent 
 {
   
@@ -21,7 +22,7 @@ export class RegisterComponent
     Estamos comprometidos a proteger tu privacidad y a brindarte la mejor experiencia posible en nuestro sitio. \n\
     Al utilizar Auction Blockchain, aceptas nuestras políticas de privacidad y el tratamiento de tus datos personales de acuerdo con lo establecido en este aviso.");
   }
-
+  
   userData = {
     name: "",
     surname: "",
