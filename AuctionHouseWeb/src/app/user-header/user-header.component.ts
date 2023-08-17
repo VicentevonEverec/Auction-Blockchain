@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ethers } from 'ethers';
-
+import { HttpClient } from '@angular/common/http';
 
 import { StateService } from '../status-service.service';
 
@@ -13,14 +13,32 @@ import { StateService } from '../status-service.service';
 
 export class UserHeaderComponent {
   
-  constructor(private router: Router, protected stateService : StateService) {}
-
-  
+  constructor(private router: Router, protected stateService : StateService, private http: HttpClient) {}
 
   async onLogin()
   {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    this.stateService.setAccount(await provider.send("eth_requestAccounts", []));
+    const account =  await provider.send("eth_requestAccounts", []);
+
+    // Llama al backend para verificar la cartera
+    this.verifyWalletInDatabase(account[0]);
+  }
+
+  verifyWalletInDatabase(walletAddress: string) {
+  
+    this.http.post('/api/check-wallet', walletAddress, { responseType: 'text' })
+      .subscribe({
+        next: response => {
+          console.log('Cartera registrada, permitiendo acceso.', response);
+          this.stateService.setAccount(walletAddress);
+        },
+        error: error => 
+        {
+          console.log('Cartera no registrada, redireccionando a registro', error);
+          window.alert("La cartera no está registrada en la base de datos."); // Redirigir a la página de registro con la cartera ya rellenada
+          this.router.navigate(['/register']);
+        }
+      });
   }
 
   async onLogout() 

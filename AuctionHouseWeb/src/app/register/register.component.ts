@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-
 export class RegisterComponent 
 {
   
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
+    
+    // Temporarlmente deshabilitado para evitar que se muestre el mensaje de privacidad cada vez que se carga la página en las pruebas
+    /*
     window.alert("Privacidad y Protección de Datos: En Auction Blockchain, valoramos y respetamos tu privacidad. \n\
     Todos los datos personales que proporcionas al registrarte en nuestro sitio serán tratados con la máxima confidencialidad y \n\
     solo serán utilizados por el equipo de administración de la página de subastas con el único propósito de prevenir fraudes y garantizar la integridad de nuestras transacciones. \n\
@@ -21,31 +24,38 @@ export class RegisterComponent
     Si tienes alguna pregunta o inquietud sobre el manejo de tus datos personales, no dudes en contactarnos a través de nuestro centro de soporte. \n\
     Estamos comprometidos a proteger tu privacidad y a brindarte la mejor experiencia posible en nuestro sitio. \n\
     Al utilizar Auction Blockchain, aceptas nuestras políticas de privacidad y el tratamiento de tus datos personales de acuerdo con lo establecido en este aviso.");
+    */
   }
-  
+
   userData = {
     name: "",
     surname: "",
     email: "",
     dni: "",
-    wallet: ""
+    walletAddress: ""
   }
 
   onRegister(): void
   {
-    console.log('Registro', this.userData);
+    const confirmacion = confirm("¿Estás seguro de que quieres registrarte?");
+    if (!confirmacion) {
+      this.router.navigate(['/home']); // Si no se confirma el registro, se redirige a la página de inicio
+    }
 
-    this.http.post('/api/register', this.userData)
+    this.http.post('/api/register', this.userData, { responseType: 'text' })
     .subscribe({
       next: response => {
         console.log('Registro exitoso', response);
-        
+        window.alert('Registro exitoso: ' + response);
+        this.router.navigate(['/home']);
       },
-      error: error => {
+      error: error => 
+      {
         console.error('Error en el registro', error);
-        // Maneja el error de registro aquí
+        window.alert('Error en el registro: ' + error.error);
       }
     });
+
   }
 
 }
