@@ -20,6 +20,7 @@ import { SearchFilterComponent } from './search-filter/search-filter.component';
 import { UserHeaderComponent } from './user-header/user-header.component';
 import { HowToSellComponent } from './how-to-sell/how-to-sell.component';
 import { RegisterComponent } from './register/register.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { RegisterComponent } from './register/register.component';
     UserHeaderComponent,
     HowToSellComponent,
     RegisterComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

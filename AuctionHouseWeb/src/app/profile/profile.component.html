@@ -1,0 +1,18 @@
+<div class="page-container">
+    <app-user-header></app-user-header>
+    <app-header></app-header>
+  
+    <div class="user-profile">
+      <div class="user-card">
+        <h2>Perfil de Usuario</h2>
+        <p><strong>Nombre:</strong> {{ stateService.getName() }}</p>
+        <p><strong>Apellidos:</strong> {{ stateService.getSurname() }}</p>
+        <p><strong>Correo Electrónico:</strong> {{ stateService.getEmail() }}</p>
+        <p><strong>DNI:</strong> {{ stateService.getDni() }}</p>
+        <p><strong>Cartera:</strong> {{ stateService.getAccount() }}</p>
+      </div>
+    </div>
+  
+    <app-footer></app-footer>
+</div>
+  

@@ -31,6 +31,7 @@ export class UserHeaderComponent {
         next: response => {
           console.log('Cartera registrada, permitiendo acceso.', response);
           this.stateService.setAccount(walletAddress);
+          this.router.navigate(['/home']); // Redirigir a la página principal
         },
         error: error => 
         {
@@ -43,7 +44,8 @@ export class UserHeaderComponent {
 
   async onLogout() 
   {
-    this.stateService.setAccount("");
+    this.stateService.cleanUserData();
+    this.router.navigate(['/home']); // Redirigir a la página principal
   }
 
   onRegister(): void {
@@ -53,4 +55,10 @@ export class UserHeaderComponent {
   onHowToSell(): void {
     this.router.navigate(['/how-to-sell']);
   }
+
+  onProfile(walletAddress : string): void 
+  {
+    this.router.navigate(['/profile']); // Redirigir a la página de perfil
+  }
+
 }

@@ -1,5 +1,8 @@
 package auction.blockchain.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,6 +57,41 @@ public class UserController
         } else {
             System.out.println("Dirección de cartera no encontrada en la base de datos.");
             return ResponseEntity.status(404).body("Dirección de cartera no encontrada en la base de datos."); // Código 404 para Not Found
+        }
+    }
+
+    @GetMapping("recover-user-data/{walletAddress}")
+    public ResponseEntity<String> recupearDatosUsuario(@PathVariable String walletAddress) {
+        // Mostramos por consola la dirección de la cartera
+        System.out.println("Buscando usuario que sea propietario de: " + walletAddress);
+
+        // Convertimos la dirección de la cartera a minúsculas para asegurarnos de que no haya problemas
+        walletAddress = walletAddress.toLowerCase();
+
+        // Comprobamos que la dirección de la cartera del usuario no esté ya registrada
+        if (databaseCheckService.checkWalletAddress(walletAddress)) {
+            System.out.println("Dirección de cartera encontrada en la base de datos.");
+            User usuario = userRepository.findByWalletAddress(walletAddress);
+
+            // Mostramos por consola todos los datos del usuario
+            System.out.println(usuario.toString());
+
+            return ResponseEntity.ok(usuarioToJsonString(usuario)); // Código 200 para OK
+        } else {
+            System.out.println("Dirección de cartera no encontrada en la base de datos.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dirección de cartera no encontrada en la base de datos."); // Código 404 para Not Found
+        }
+    }
+
+    private String usuarioToJsonString(User usuario) {
+        // Aquí convierte el objeto User a una cadena JSON, puedes usar una librería como Jackson o Gson
+        // Por ejemplo con Jackson:
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(usuario);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 
