@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ethers } from 'ethers';
 
 @Component({
   selector: 'app-register',
@@ -56,6 +57,12 @@ export class RegisterComponent
       }
     });
 
+  }
+
+  async autofillWallet() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const account =  await provider.send("eth_requestAccounts", []);
+    this.userData.walletAddress = account[0];
   }
 
 }

@@ -34,7 +34,12 @@
           <div class="form-group">
             <label for="wallet">Billetera ETH:</label>
             <input type="text" id="wallet" name="wallet" [(ngModel)]="userData.walletAddress" required>
+            <br>
+            <button type="button" (click)="autofillWallet()">Autorellenar Billetera</button>
           </div>
+          
+          <br>
+          <br>
           <button type="submit" id="submitButton">
             Registrarse
           </button>
