@@ -10,13 +10,16 @@
         <p><strong>Correo Electrónico:</strong> {{ stateService.getEmail() }}</p>
         <p><strong>DNI:</strong> {{ stateService.getDni() }}</p>
         
-        <div class="user-card">
+        <div class="wallet-card">
             <h2>Administración de carteras</h2>
             Mira lo de añadir más carteras y recoger en un histórico las utilizadas, para poder ir cambiando, añadiendo, borrando...
 
             <p><strong>Cartera actual: </strong> {{ stateService.getAccount() }}</p>
 
-            <a (click)="redirectHistory()"><strong> Historial de carteras </strong></a>
+            <div class="button-container">
+              <a routerLink="/wallet-history" class="custom-button">Historial de carteras</a>
+              <a routerLink="/wallet-management" class="custom-button">Administrar carteras</a>
+            </div>            
 
         </div>
       </div>

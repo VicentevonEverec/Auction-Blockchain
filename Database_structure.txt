@@ -11,6 +11,6 @@ CREATE TABLE `user` (
 CREATE TABLE `wallet_history` (
   `user_dni` varchar(10) NOT NULL,
   `wallet_address` varchar(255) NOT NULL,
-  PRIMARY KEY (`user_dni`),
+  PRIMARY KEY (`user_dni`,`wallet_address`),
   CONSTRAINT `user_dni` FOREIGN KEY (`user_dni`) REFERENCES `user` (`dni`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+)

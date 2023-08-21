@@ -29,9 +29,4 @@ export class ProfileComponent
       }
     });
   }
-
-  redirectHistory()
-  {
-    this.router.navigate(['/wallet-history']);
-  }
 }

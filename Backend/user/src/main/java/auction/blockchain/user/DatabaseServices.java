@@ -5,17 +5,15 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Service
-public class DatabaseCheckService {
+public class DatabaseServices {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public DatabaseCheckService(JdbcTemplate jdbcTemplate) {
+    public DatabaseServices(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -74,46 +72,64 @@ public class DatabaseCheckService {
         }
     }
 
-    public String[] walletHistory(String dni) {
+    public List<String> walletHistory(String walletAddress) {
         try {
-            // Buscamos en la base de datos la dirección de la cartera
-            String[] history;
-
             // Primero buscamos la cartera del usuario actual en user
-            String[] userWallet = jdbcTemplate.queryForObject(
-                    "SELECT wallet_address FROM user WHERE dni = ?",
-                    String[].class, dni);
+            String dni = jdbcTemplate.queryForObject(
+                    "SELECT dni FROM user WHERE wallet_address = ?",
+                    String.class, walletAddress);
 
-            // Luego, buscamos las carteras del historial y las añadimos a la historia
-            history = userWallet;  // Inicializamos history con las carteras del usuario
+            List<String> walletHistory = jdbcTemplate.query(
+                    "SELECT wallet_address FROM wallet_history WHERE user_dni = ?",
+                    (resultSet, rowNum) -> resultSet.getString("wallet_address"), dni);
 
-            try {
-                String[] walletHistory = jdbcTemplate.queryForObject(
-                        "SELECT wallet_address FROM wallet_history WHERE user_dni = ?", String[].class, dni);
 
-                // Agregamos las carteras del historial a history sin duplicados
-                history = mergeArrays(userWallet, walletHistory);
-            } catch (EmptyResultDataAccessException ignored) {
-                // Mostramos un mensaje de error si no se encuentra ningún resultado
-                System.out.println("No se ha encontrado ningún historial de carteras");
+            return walletHistory;
             }
 
-            return history;
-        } catch (EmptyResultDataAccessException e) {
-            // EmptyResultDataAccessException se lanza si no se encuentra ningún resultado
-            return null;
+        catch (EmptyResultDataAccessException ignored) {
+                // Mostramos un mensaje de error si no se encuentra ningún resultado
+                System.out.println("No se ha encontrado ningún historial de carteras");
+
+                return null;
+            }
+    }
+
+    public String insertWalletHistory(String walletAddress, String dni)
+    {
+        try {
+            jdbcTemplate.update("INSERT INTO wallet_history (wallet_address, user_dni) VALUES (?, ?)", walletAddress, dni);
+            return "Historial de carteras insertado correctamente";
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return "Error al insertar el historial de carteras";
         }
     }
 
-    // Función para combinar dos arrays eliminando duplicados
-    private String[] mergeArrays(String[] arr1, String[] arr2) {
-        Set<String> mergedSet = new HashSet<>(Arrays.asList(arr1));
-        mergedSet.addAll(Arrays.asList(arr2));
-        return mergedSet.toArray(new String[0]);
+    public boolean checkWalletHistory(String walletAddress, String dni)
+    {
+        try {
+            // Buscamos en la base de datos la dirección de la cartera
+            jdbcTemplate.queryForObject("SELECT 1 FROM wallet_history WHERE wallet_address = ? AND user_dni = ?", Integer.class, walletAddress, dni);
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            // EmptyResultDataAccessException se lanza si no se encuentra ningún resultado
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
+    public String deleteWalletHistory(String walletAddress, String dni)
+    {
+        try {
+            jdbcTemplate.update("DELETE FROM wallet_history WHERE wallet_address = ? AND user_dni = ?", walletAddress, dni);
+            return "Historial de carteras eliminado correctamente";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error al eliminar el historial de carteras";
+        }
+    }
 }
 

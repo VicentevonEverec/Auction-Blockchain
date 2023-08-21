@@ -22,6 +22,10 @@ import { HowToSellComponent } from './how-to-sell/how-to-sell.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { WalletHistoryComponent } from './wallet-history/wallet-history.component';
+import { WalletManagementComponent } from './wallet-management/wallet-management.component';
+import { AddWalletComponent } from './add-wallet/add-wallet.component';
+import { DeleteWalletComponent } from './delete-wallet/delete-wallet.component';
+import { ChangeWalletComponent } from './change-wallet/change-wallet.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +40,10 @@ import { WalletHistoryComponent } from './wallet-history/wallet-history.componen
     RegisterComponent,
     ProfileComponent,
     WalletHistoryComponent,
+    WalletManagementComponent,
+    AddWalletComponent,
+    DeleteWalletComponent,
+    ChangeWalletComponent,
   ],
   imports: [
     BrowserModule,

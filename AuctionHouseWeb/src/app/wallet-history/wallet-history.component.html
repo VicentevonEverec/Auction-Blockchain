@@ -5,10 +5,17 @@
     <div class="user-profile">
       <div class="user-card">
         <h2>Historial de carteras</h2>
-        <!-- Mostramos los datos de StateService -->
-        <p><strong>Nombre:</strong> {{ stateService.getName() }}</p>
+
         <p><strong>Cartera actual:</strong> {{ currentWallet }}</p>
-        <p><strong>Carteras añadidas a esta cuenta:</strong> {{ walletHistory }}</p>
+        <strong>Carteras añadidas a esta cuenta:</strong> 
+            <div *ngIf="walletHistory.length > 0">
+                <ul>
+                    <li *ngFor="let wallet of walletHistory">
+                        {{ wallet }}
+                    </li>
+                </ul>
+          </div>
+
       </div>
     </div>
   

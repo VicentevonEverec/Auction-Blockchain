@@ -6,6 +6,11 @@ import { RegisterComponent } from './register/register.component';
 
 import { ProfileComponent } from './profile/profile.component';
 import { WalletHistoryComponent } from './wallet-history/wallet-history.component';
+import { WalletManagementComponent } from './wallet-management/wallet-management.component';
+
+import { AddWalletComponent } from './add-wallet/add-wallet.component';
+import { DeleteWalletComponent } from './delete-wallet/delete-wallet.component';
+import { ChangeWalletComponent } from './change-wallet/change-wallet.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -14,6 +19,10 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'wallet-history', component: WalletHistoryComponent },
+  { path: 'wallet-management', component: WalletManagementComponent },
+  { path: 'add-wallet', component: AddWalletComponent },
+  { path: 'delete-wallet', component: DeleteWalletComponent },
+  { path: 'change-wallet', component: ChangeWalletComponent }
 ];
 
 @NgModule({
