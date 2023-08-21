@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { StateService } from '../status-service.service';
 
 import { HttpClient } from '@angular/common/http';
@@ -10,9 +11,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ProfileComponent 
 {
-  constructor(protected stateService : StateService, protected http : HttpClient) {}
+  constructor(protected stateService : StateService, protected http : HttpClient, protected router : Router) {}
 
-  ngOnInit() {
+  ngOnInit() 
+  {
     this.http.get(`/api/recover-user-data/${this.stateService.getAccount()}`, { responseType: 'json' })
     .subscribe({
       next: userData => {
@@ -26,5 +28,10 @@ export class ProfileComponent
         window.alert("No se pudieron recuperar los datos del usuario."); // Manejo de error
       }
     });
+  }
+
+  redirectHistory()
+  {
+    this.router.navigate(['/wallet-history']);
   }
 }

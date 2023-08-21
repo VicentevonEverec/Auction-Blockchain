@@ -15,6 +15,9 @@
             Mira lo de añadir más carteras y recoger en un histórico las utilizadas, para poder ir cambiando, añadiendo, borrando...
 
             <p><strong>Cartera actual: </strong> {{ stateService.getAccount() }}</p>
+
+            <a (click)="redirectHistory()"><strong> Historial de carteras </strong></a>
+
         </div>
       </div>
     </div>

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { BehaviorSubject } from 'rxjs';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -14,22 +16,43 @@ export class StateService
     account: ""
   }
 
-  constructor() {}
+  private walletSubject = new BehaviorSubject<string>('');
 
-  getAccount() : string
-  {
-    return this.userData.account;
+  wallet$ = this.walletSubject.asObservable();
+
+  constructor() {
+    // Al iniciar el servicio, intenta cargar la cartera desde Local Storage
+    this.loadWallet();
   }
 
-  // Creamos una función para que al mostrar la cartera se vea como se ve en todos los sitios sin mostrar todo el código
-  getAccountToShow() : string
-  {
-    return this.userData.account.substring(0, 6) + "..." + this.userData.account.substring(this.userData.account.length - 4);
+  setWallet(wallet: string): void {
+    // Actualizar la cartera en el BehaviorSubject y guardar en Local Storage
+    this.walletSubject.next(wallet);
+    this.saveWallet(wallet);
   }
 
-  setAccount(account : string) : void
-  {
-    this.userData.account = account;
+  private loadWallet() {
+    const storedWallet = localStorage.getItem('wallet');
+    if (storedWallet) {
+      // Cargar la cartera desde Local Storage
+      this.walletSubject.next(storedWallet);
+    }
+  }
+
+  private saveWallet(wallet: string) {
+    // Guardar la cartera en Local Storage
+    localStorage.setItem('wallet', wallet);
+  }
+
+  getAccount(): string {
+    // Obtener el valor de la cartera desde el BehaviorSubject
+    return this.walletSubject.value;
+  }
+
+  getAccountToShow(): string {
+    const wallet = this.walletSubject.value;
+    // Modificar el valor de la cartera para mostrarlo como se desea
+    return wallet.substring(0, 6) + '...' + wallet.substring(wallet.length - 4);
   }
 
   getDni() : string
@@ -86,7 +109,7 @@ export class StateService
     this.setSurname("");
     this.setEmail("");
     this.setDni("");
-    this.setAccount("");
+    this.setWallet("");
   }
 
   getUserData() : any

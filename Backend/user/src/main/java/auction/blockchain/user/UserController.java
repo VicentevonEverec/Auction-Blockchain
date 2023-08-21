@@ -83,9 +83,33 @@ public class UserController
         }
     }
 
+    @GetMapping("wallet-history/{dni}")
+    public ResponseEntity<String[]> recuperarHistorialCarteras(@PathVariable String dni)
+    {
+        // Mostramos por consola el DNI del usuario
+        System.out.println("Buscando historial de carteras para el DNI: " + dni);
+
+        try {
+            // Comprobamos si existe historial de carteras para el DNI
+            String[] history = databaseCheckService.walletHistory(dni);
+
+            if (history != null) {
+                System.out.println("Historial de carteras encontrado en la base de datos.");
+                System.out.println("Historial: " + String.join(", ", history));
+
+                return ResponseEntity.ok(history); // Código 200 para OK
+            } else {
+                System.out.println("Historial de carteras no encontrado en la base de datos.");
+                return ResponseEntity.notFound().build(); // Código 404 para Not Found
+            }
+        } catch (Exception e) {
+            System.out.println("Error al buscar el historial de carteras: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Código 500 para Internal Server Error
+        }
+    }
+
     private String usuarioToJsonString(User usuario) {
         // Aquí convierte el objeto User a una cadena JSON, puedes usar una librería como Jackson o Gson
-        // Por ejemplo con Jackson:
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.writeValueAsString(usuario);

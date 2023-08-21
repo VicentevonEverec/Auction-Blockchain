@@ -30,7 +30,7 @@ export class UserHeaderComponent {
       .subscribe({
         next: response => {
           console.log('Cartera registrada, permitiendo acceso.', response);
-          this.stateService.setAccount(walletAddress);
+          this.stateService.setWallet(walletAddress);
           this.router.navigate(['/home']); // Redirigir a la página principal
         },
         error: error => 

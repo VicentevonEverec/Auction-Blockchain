@@ -21,6 +21,7 @@ import { UserHeaderComponent } from './user-header/user-header.component';
 import { HowToSellComponent } from './how-to-sell/how-to-sell.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
+import { WalletHistoryComponent } from './wallet-history/wallet-history.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ProfileComponent } from './profile/profile.component';
     HowToSellComponent,
     RegisterComponent,
     ProfileComponent,
+    WalletHistoryComponent,
   ],
   imports: [
     BrowserModule,
