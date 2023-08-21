@@ -59,10 +59,15 @@ export class RegisterComponent
 
   }
 
-  async autofillWallet() {
+  isAutofillEnabled = false;
+
+  async autofillWallet() 
+  {
+    this.isAutofillEnabled = true;
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const account =  await provider.send("eth_requestAccounts", []);
     this.userData.walletAddress = account[0];
+    this.isAutofillEnabled = false;
   }
 
 }
