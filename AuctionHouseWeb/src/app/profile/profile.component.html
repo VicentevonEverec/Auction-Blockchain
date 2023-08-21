@@ -9,12 +9,13 @@
         <p><strong>Apellidos:</strong> {{ stateService.getSurname() }}</p>
         <p><strong>Correo Electrónico:</strong> {{ stateService.getEmail() }}</p>
         <p><strong>DNI:</strong> {{ stateService.getDni() }}</p>
-        <p><strong>Cartera: 
-
-            <br>
+        
+        <div class="user-card">
+            <h2>Administración de carteras</h2>
             Mira lo de añadir más carteras y recoger en un histórico las utilizadas, para poder ir cambiando, añadiendo, borrando...
 
-        </strong> {{ stateService.getAccount() }}</p>
+            <p><strong>Cartera actual: </strong> {{ stateService.getAccount() }}</p>
+        </div>
       </div>
     </div>
   

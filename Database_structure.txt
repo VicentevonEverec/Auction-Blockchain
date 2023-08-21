@@ -1,8 +1,9 @@
-CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(100) NOT NULL,
-  surname VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL,
-  dni VARCHAR(10) NOT NULL,
-  wallet VARCHAR(100) NOT NULL
-);
+CREATE TABLE `user` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `dni` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `surname` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `wallet_address` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`,`dni`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
