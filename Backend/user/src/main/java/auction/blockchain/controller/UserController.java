@@ -1,7 +1,12 @@
-package auction.blockchain.user;
+package auction.blockchain.controller;
 
+import auction.blockchain.service.IDatabaseService;
+import auction.blockchain.entities.User;
+import auction.blockchain.service.IUserService;
+import auction.blockchain.service.IWalletHistoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +14,19 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class UserController {
-    private final DatabaseServices databaseServices;
-    private final UserRepository userRepository;
 
-    public UserController(DatabaseServices databaseServices, UserRepository userRepository) {
-        this.databaseServices = databaseServices;
-        this.userRepository = userRepository;
+    @Autowired
+    private IDatabaseService databaseService;
+
+    @Autowired
+    private IUserService userService;
+
+    @Autowired
+    private IWalletHistoryService walletHistoryService;
+
+    @GetMapping("/health")
+    public String checkHealth() {
+        return "La aplicación está en funcionamiento"; // Puedes personalizar este mensaje
     }
 
     @PostMapping("/register")
@@ -31,22 +43,22 @@ public class UserController {
         }
 
         // Comprobamos que el DNI del usuario no esté ya registrado
-        if (databaseServices.checkUser(usuario.getDni())) {
+        if (databaseService.checkUser(usuario.getDni())) {
             return ResponseEntity.status(409).body("El usuario ya está registrado"); // Código 409 para Conflict
         }
 
         // Comprobamos que la dirección de la cartera del usuario no esté ya registrada
-        if (databaseServices.checkWalletAddress(usuario.getWalletAddress())) {
+        if (databaseService.checkWalletAddress(usuario.getWalletAddress())) {
             return ResponseEntity.status(409).body("La dirección de la cartera ya está registrada"); // Código 409 para Conflict
         }
 
         // Si todas las comprobaciones pasan, guardamos el usuario y enviamos una respuesta exitosa
-        userRepository.save(usuario);
+        userService.guardarUsuario(usuario);
         return ResponseEntity.ok("Usuario registrado con éxito"); // Código 200 para OK
     }
 
     @GetMapping("recover-user-data/{walletAddress}")
-    public ResponseEntity<String> recupearDatosUsuario(@PathVariable String walletAddress) {
+    public ResponseEntity<String> recuperarDatosUsuario(@PathVariable String walletAddress) {
         // Mostramos por consola la dirección de la cartera
         System.out.println("Buscando usuario que sea propietario de: " + walletAddress);
 
@@ -54,10 +66,17 @@ public class UserController {
         walletAddress = walletAddress.toLowerCase();
 
         // Comprobamos que la dirección de la cartera del usuario no esté ya registrada
-        if (databaseServices.checkWalletAddress(walletAddress)) {
+        if (databaseService.checkWalletAddress(walletAddress)) {
             System.out.println("Dirección de cartera encontrada en la base de datos.");
-            User usuario = userRepository.findByWalletAddress(walletAddress);
 
+            User usuario = userService.findByWalletAddress(walletAddress);
+            if (usuario == null) {
+                // Buscamos al usuario en el historial de carteras
+                System.out.println("Buscando en el historial de carteras...");
+                String idUsuario = walletHistoryService.findUserDniByWalletAddress(walletAddress);
+
+                usuario = userService.encontrarUsuarioPorDni(idUsuario);
+            }
             // Mostramos por consola todos los datos del usuario
             System.out.println(usuario.toString());
 

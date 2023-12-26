@@ -1,5 +1,9 @@
-package auction.blockchain.user;
+package auction.blockchain.serviceimpl;
 
+import auction.blockchain.entities.User;
+import auction.blockchain.service.IDatabaseService;
+import auction.blockchain.service.IUserService;
+import auction.blockchain.service.IWalletHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,15 +12,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class DatabaseServices {
-
-    private final JdbcTemplate jdbcTemplate;
+public class DatabaseServiceImpl implements IDatabaseService {
 
     @Autowired
-    public DatabaseServices(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private IWalletHistoryService walletHistoryService;
+
+    @Autowired
+    private IUserService userService;
+
+    @Override
     public String checkDatabaseConnection() {
         try {
             // Realiza una consulta simple a la base de datos para verificar la conexión
@@ -29,6 +36,7 @@ public class DatabaseServices {
     }
 
     // Introducimos un método para comprobar la inserción de un usuario en la base de datos
+    @Override
     public String insertUser(User user)
     {
         try {
@@ -40,6 +48,7 @@ public class DatabaseServices {
         }
     }
 
+    @Override
     public boolean checkUser(String dni) {
         try {
             // Realiza una consulta simple a la base de datos para verificar la conexión
@@ -54,7 +63,7 @@ public class DatabaseServices {
         }
     }
 
-
+    @Override
     public boolean checkWalletAddress(String walletAddress)
     {
         System.out.println("Buscando en la base de datos: " + walletAddress);
@@ -65,24 +74,43 @@ public class DatabaseServices {
             return true;
         } catch (EmptyResultDataAccessException e) {
             // EmptyResultDataAccessException se lanza si no se encuentra ningún resultado
-            return false;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            // En cuyo caso buscamos en la tabla de historial de carteras
+        try {
+                jdbcTemplate.queryForObject("SELECT 1 FROM wallet_history WHERE wallet_address = ?", Integer.class, walletAddress);
+                return true;
+            } catch (EmptyResultDataAccessException e2) {
+                // EmptyResultDataAccessException se lanza si no se encuentra ningún resultado
+                return false;
+            } catch (Exception e2) {
+                e2.printStackTrace();
+                return false;
+            }
         }
     }
 
-    public List<String> walletHistory(String walletAddress) {
+    @Override
+    public String dniAsociado(String walletAddress)
+    {
         try {
-            // Primero buscamos la cartera del usuario actual en user
-            String dni = jdbcTemplate.queryForObject(
-                    "SELECT dni FROM user WHERE wallet_address = ?",
-                    String.class, walletAddress);
+            // Buscamos en la base de datos la dirección de la cartera
+            return jdbcTemplate.queryForObject("SELECT dni FROM user WHERE wallet_address = ?", String.class, walletAddress);
+        } catch (EmptyResultDataAccessException e) {
+            // EmptyResultDataAccessException se lanza si no se encuentra ningún resultado
+            // Buscamos al usuario en el historial de carteras
+            System.out.println("Buscando en el historial de carteras...");
+            return walletHistoryService.findUserDniByWalletAddress(walletAddress);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    @Override
+    public List<String> walletHistory(String dni) {
+        try {
             List<String> walletHistory = jdbcTemplate.query(
                     "SELECT wallet_address FROM wallet_history WHERE user_dni = ?",
                     (resultSet, rowNum) -> resultSet.getString("wallet_address"), dni);
-
 
             return walletHistory;
             }
@@ -95,6 +123,7 @@ public class DatabaseServices {
             }
     }
 
+    @Override
     public String insertWalletHistory(String walletAddress, String dni)
     {
         try {
@@ -106,6 +135,7 @@ public class DatabaseServices {
         }
     }
 
+    @Override
     public boolean checkWalletHistory(String walletAddress, String dni)
     {
         try {
@@ -121,6 +151,7 @@ public class DatabaseServices {
         }
     }
 
+    @Override
     public String deleteWalletHistory(String walletAddress, String dni)
     {
         try {
@@ -129,6 +160,22 @@ public class DatabaseServices {
         } catch (Exception e) {
             e.printStackTrace();
             return "Error al eliminar el historial de carteras";
+        }
+    }
+
+    @Override
+    public String changeCurrentWallet(String newWalletAddress, String currentWalletAddress, String dni)
+    {
+        try {
+            walletHistoryService.deleteByWalletAddressAndUserDni(newWalletAddress, dni);
+            walletHistoryService.insertWalletHistory(currentWalletAddress, dni);
+
+            userService.updateWalletAddress(newWalletAddress, dni);
+
+            return "Historial de carteras actualizado correctamente";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error al realizar el cambio de cartera";
         }
     }
 }

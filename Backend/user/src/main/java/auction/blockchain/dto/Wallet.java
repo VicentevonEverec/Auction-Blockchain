@@ -1,4 +1,4 @@
-package auction.blockchain.user;
+package auction.blockchain.dto;
 
 import lombok.Data;
 
