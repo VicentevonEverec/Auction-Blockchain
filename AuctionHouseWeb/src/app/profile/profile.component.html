@@ -20,6 +20,8 @@
 
             <p><strong>Cartera actual: </strong> {{ stateService.getAccount() }}</p>
 
+            <p><strong>Saldo actual: </strong> {{ this.ethereumAmount }} ETH {{ this.convertedAmount }} EUR</p>
+
             <div class="button-container">
               <a routerLink="/wallet-history" class="custom-button">Historial de carteras</a>
               <a routerLink="/wallet-management" class="custom-button">Administrar carteras</a>

@@ -12,10 +12,11 @@
 
         <p><strong>Cartera actual:</strong> {{ currentWallet }}</p>
         <strong>Carteras añadidas a esta cuenta:</strong> 
-            <div *ngIf="walletHistory.length > 0">
+            <div *ngIf="walletsWithValues.length > 0">
                 <ul>
-                    <li *ngFor="let wallet of walletHistory">
-                        {{ wallet }}
+                    <li *ngFor="let wallet of walletsWithValues">
+                        {{ wallet.wallet }}
+                        <p><strong>Saldo actual: </strong> {{ wallet.ethereumAmount }} ETH {{ wallet.convertedAmount }} EUR</p>
                     </li>
                 </ul>
           </div>

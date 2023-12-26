@@ -8,6 +8,35 @@ import { BehaviorSubject } from 'rxjs';
 
 export class StateService 
 {
+
+  setEthereumPrice(price: number) { localStorage.setItem('ethereumPrice', price.toString()) }
+
+  getEthereumPrice() { 
+    const ethereumPriceString = localStorage.getItem('ethereumPrice');
+    if (ethereumPriceString !== null) {
+      const ethereumPrice = parseFloat(ethereumPriceString);
+      console.log('Ethereum Price:', ethereumPrice);
+      return ethereumPrice;
+    } else {
+      console.log('El valor de Ethereum Price en localStorage es nulo.');
+      return 0;
+    }
+  }
+
+  setCacheRecargas(cache: number) { localStorage.setItem('cacheRecargas', cache.toString()) }
+
+  getCacheRecargas() { 
+    const cacheRecargas = localStorage.getItem('cacheRecargas');
+    if (cacheRecargas !== null) {
+      const cache = parseFloat(cacheRecargas);
+      console.log('Tiempo caché:', cache);
+      return cache;
+    } else {
+      console.log('El valor del tiempo de recarga en localStorage es nulo.');
+      return 0;
+    } 
+  }
+
   userData = {
     name: "",
     surname: "",

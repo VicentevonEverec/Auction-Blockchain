@@ -11,11 +11,12 @@
           <h2>¿Qué cartera quieres establecer como la principal de tu cuenta?</h2>
   
           <strong>Carteras disponibles para seleccionar:</strong>
-          <div *ngIf="walletHistory !== null && walletHistory.length > 0; else noWalletsMessage">
+          <div *ngIf="walletsWithValues !== null && walletsWithValues.length > 0; else noWalletsMessage">
               <ul>
-                  <li *ngFor="let wallet of walletHistory" class="carteras">
-                      {{ wallet }}
-                      <button class="change-button" (click)="changeWallet(wallet);">Cambiar</button>
+                  <li *ngFor="let wallet of walletsWithValues" class="carteras">
+                      {{ wallet.wallet }}
+                      <button class="change-button" (click)="changeWallet(wallet.wallet);">Cambiar</button>
+                      <p><strong>Saldo actual: </strong> {{ wallet.ethereumAmount }} ETH {{ wallet.convertedAmount }} EUR</p>
                   </li>
               </ul>
           </div>
