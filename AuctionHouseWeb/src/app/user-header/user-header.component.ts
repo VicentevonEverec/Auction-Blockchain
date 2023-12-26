@@ -29,8 +29,8 @@ export class UserHeaderComponent {
     this.http.post('/api/check-wallet', walletAddress, { responseType: 'text' })
       .subscribe({
         next: response => {
-          console.log('Cartera registrada, permitiendo acceso.', response);
-          this.stateService.setWallet(walletAddress);
+          console.log('Cartera registrada, permitiendo acceso.');
+          this.stateService.setWallet(response);
           this.router.navigate(['/home']); // Redirigir a la página principal
         },
         error: error => 

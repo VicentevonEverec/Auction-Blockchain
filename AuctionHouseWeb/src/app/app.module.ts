@@ -27,6 +27,8 @@ import { AddWalletComponent } from './add-wallet/add-wallet.component';
 import { DeleteWalletComponent } from './delete-wallet/delete-wallet.component';
 import { ChangeWalletComponent } from './change-wallet/change-wallet.component';
 
+import { BackArrowComponent } from 'src/componentes/back-arrow/back-arrow';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +46,7 @@ import { ChangeWalletComponent } from './change-wallet/change-wallet.component';
     AddWalletComponent,
     DeleteWalletComponent,
     ChangeWalletComponent,
+    BackArrowComponent
   ],
   imports: [
     BrowserModule,
