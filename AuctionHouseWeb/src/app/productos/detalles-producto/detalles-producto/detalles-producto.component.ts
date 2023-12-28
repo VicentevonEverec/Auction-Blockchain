@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { StateService } from '../../../status-service.service';
 
 @Component({
   selector: 'app-detalles-producto',
@@ -11,11 +12,42 @@ export class DetallesProductoComponent implements OnInit {
 
   producto = {
     id: "", nombre: "", descripcion: "",
-     estado: "", categoria: "", precioInicial: "", precioActual: "",
-    fechaInicioSubasta: "", fechaFinalSubasta: "", estadoSubasta: "", imagenProducto: ""
+     estado: "", categoria: "", precioInicial: 0, precioActual: 0,
+     fechaInicioSubasta: "", fechaFinalSubasta: "", estadoSubasta: "", imagenProducto: "",
+     precioEthInicial: 0, precioEthActual: 0
     };
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) { }
+  private intervaloTiempo: any;
+
+  constructor(private http: HttpClient, private route: ActivatedRoute, protected stateService : StateService) { }
+
+  ethereumPrice = this.stateService.getEthereumPrice();
+  recargaCache = this.stateService.getCacheRecargas();
+  cacheDuration = 60000; // Duración de la caché en milisegundos (aquí, 1 minuto)
+
+  getEthereumPrice(): void {
+    // Verifica si el precio está en caché y si el tiempo transcurrido desde la última solicitud es menor que el límite de la caché
+    if (this.ethereumPrice !== null && this.recargaCache !== 0 && Date.now() - this.recargaCache < this.cacheDuration) {
+      console.log('Precio de Ethereum obtenido de la caché:', this.ethereumPrice);
+    } else {
+      console.log("Tiempo antes de la solicitud:", this.recargaCache);
+    const url = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur';
+    this.http.get<any>(url)
+      .subscribe(response => {
+        this.stateService.setCacheRecargas(Date.now()); // Actualiza el tiempo de la última solicitud
+        this.stateService.setEthereumPrice(response.ethereum.eur);
+      }, error => {
+        console.error('Error al obtener el precio de Ethereum:', error);
+      });
+    }
+  }
+
+  iniciarIntervalo(): void {
+    this.intervaloTiempo = setInterval(() => {
+      this.calcularTiempoRestante();
+    }, 1000); // Intervalo de actualización de 1 segundo
+  }
+  
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -27,6 +59,8 @@ export class DetallesProductoComponent implements OnInit {
         next: response => {
           console.log("Detalles del producto obtenidos.");
           this.setProducto(response);
+          this.calcularTiempoRestante();
+          this.intervaloTiempo = this.iniciarIntervalo();
         },
         error: error => 
         {
@@ -34,10 +68,29 @@ export class DetallesProductoComponent implements OnInit {
           window.alert("No se pudo recuperar la lista de productos."); // Manejo de error
         }
       });
-      const id = params['id'];
-      console.log('ID del producto:', id);
-      // Aquí puedes utilizar el ID del producto para realizar acciones adicionales, como cargar detalles del producto desde el backend, etc.
-  });
+    });
+  }
+
+  tiempoRestante: string = '';
+
+  calcularTiempoRestante(): void {
+    const fechaLimiteDate = new Date(this.producto.fechaFinalSubasta);
+    const fechaActual = new Date();
+
+    const diferenciaTiempo = fechaLimiteDate.getTime() - fechaActual.getTime();
+
+    if (diferenciaTiempo <= 0) {
+      this.tiempoRestante = 'La puja ha finalizado';
+      clearInterval(this.intervaloTiempo);
+      return;
+    }
+
+    const dias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diferenciaTiempo % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutos = Math.floor((diferenciaTiempo % (1000 * 60 * 60)) / (1000 * 60));
+    const segundos = Math.floor((diferenciaTiempo % (1000 * 60)) / 1000);
+
+    this.tiempoRestante = `${dias} días, ${horas} horas, ${minutos} minutos, ${segundos} segundos`;
   }
 
   // Creamos los getters y setters de los atributos del producto
@@ -74,19 +127,19 @@ export class DetallesProductoComponent implements OnInit {
     this.producto.estado = estado;
   }
 
-  getPrecioInicial(): string {
+  getPrecioInicial(): number {
     return this.producto.precioInicial;
   }
 
-  setPrecioInicial(precioInicial: string): void {
+  setPrecioInicial(precioInicial: number): void {
     this.producto.precioInicial = precioInicial;
   }
 
-  getPrecioActual(): string {
+  getPrecioActual(): number {
     return this.producto.precioActual;
   }
 
-  setPrecioActual(precioActual: string): void {
+  setPrecioActual(precioActual: number): void {
     this.producto.precioActual = precioActual;
   }
 
@@ -95,7 +148,7 @@ export class DetallesProductoComponent implements OnInit {
   }
 
   setFechaInicioSubasta(fechaInicioSubasta: string): void {
-    this.producto.fechaInicioSubasta = fechaInicioSubasta;
+    this.producto.fechaInicioSubasta = fechaInicioSubasta.slice(0, 10);
   }
 
   getFechaFinalSubasta(): string {
@@ -103,7 +156,7 @@ export class DetallesProductoComponent implements OnInit {
   }
 
   setFechaFinalSubasta(fechaFinalSubasta: string): void {
-    this.producto.fechaFinalSubasta = fechaFinalSubasta;
+    this.producto.fechaFinalSubasta = fechaFinalSubasta.slice(0, 10);
   }
 
   getEstadoSubasta(): string {
@@ -130,6 +183,24 @@ export class DetallesProductoComponent implements OnInit {
     this.producto.categoria = categoria;
   }
 
+  getPrecioEthInicial(): number {
+    return this.producto.precioEthInicial;
+  }
+
+  setPrecioEthInicial(precioEth: number): void {
+    this.getEthereumPrice();
+    this.producto.precioEthInicial = precioEth / this.ethereumPrice;
+  }
+
+  getPrecioEthActual(): number {
+    return this.producto.precioEthActual;
+  }
+
+  setPrecioEthActual(precioEth: number): void {
+    this.getEthereumPrice();
+    this.producto.precioEthActual = precioEth  / this.ethereumPrice;
+  }
+
   setProducto(producto: any) {
     this.setId(producto.id);
     this.setNombre(producto.nombre);
@@ -142,6 +213,8 @@ export class DetallesProductoComponent implements OnInit {
     this.setFechaFinalSubasta(producto.fechaFinalSubasta);
     this.setEstadoSubasta(producto.estadoSubasta);
     this.setImagenProducto(producto.imagenProducto);
+    this.setPrecioEthInicial(producto.precioInicial);
+    this.setPrecioEthActual(producto.precioActual);
   }
 
 }

@@ -10,17 +10,22 @@
     <div class="page-container">
         <div class="product-details">
             <div class="product-card">
+                <p class="temporizador"><strong>Tiempo restante </strong>
+                <br>
+                    <span [ngClass]="{'red-text': tiempoRestante === 'La puja ha finalizado'}">
+                    {{ tiempoRestante }}</span></p>
                 <h2>{{ producto.nombre }}</h2>
+                <br>
                 <div class="product-info">
-                    <div>
+                    <div class="imagen-container">
                     <img class="imagen" [src]="producto.imagenProducto" alt="Imagen del Producto" />
                 </div>
                 <div class="product-data">
                     <p><strong>Descripción:</strong> <br> {{ producto.descripcion }}</p>
                     <p><strong>Estado:</strong> {{ producto.estado }}</p>
                     <p><strong>Categoría:</strong> {{ producto.categoria }}</p>
-                    <p><strong>Precio Inicial:</strong> <br> {{ producto.precioInicial }} EUR</p>
-                    <p><strong>Precio Actual:</strong> <br>  {{ producto.precioActual }} EUR</p>
+                    <p><strong>Precio Inicial:</strong> <br> {{ producto.precioEthInicial.toFixed(5) }} ETH - {{ producto.precioInicial }} EUR</p>
+                    <p><strong>Precio Actual:</strong> <br>  {{ producto.precioEthActual.toFixed(5) }} ETH - {{ producto.precioActual }} EUR</p>
                     <p><strong>Fecha Inicio Subasta:</strong> <br> {{ producto.fechaInicioSubasta }}</p>
                     <p><strong>Fecha Final Subasta:</strong> <br> {{ producto.fechaFinalSubasta }}</p>
                     <p><strong>Estado puja:</strong> <br>
