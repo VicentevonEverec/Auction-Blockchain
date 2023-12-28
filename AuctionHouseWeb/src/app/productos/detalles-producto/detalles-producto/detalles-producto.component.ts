@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { StateService } from '../../../status-service.service';
+import { ethers } from 'ethers';
 
 @Component({
   selector: 'app-detalles-producto',
@@ -24,11 +25,20 @@ export class DetallesProductoComponent implements OnInit {
   ethereumPrice = this.stateService.getEthereumPrice();
   recargaCache = this.stateService.getCacheRecargas();
   cacheDuration = 60000; // Duración de la caché en milisegundos (aquí, 1 minuto)
+  convertedAmount = this.stateService.getFondosActuales();
+  fondosSuficientes : boolean = false;
+
+  mostrarBotonPuja() {
+    const porcentaje = 0.9; // 90%
+    console.log('Margen del producto:', this.producto.precioActual * porcentaje);
+    this.fondosSuficientes = this.convertedAmount >= (this.producto.precioActual * porcentaje);
+  }
 
   getEthereumPrice(): void {
     // Verifica si el precio está en caché y si el tiempo transcurrido desde la última solicitud es menor que el límite de la caché
     if (this.ethereumPrice !== null && this.recargaCache !== 0 && Date.now() - this.recargaCache < this.cacheDuration) {
       console.log('Precio de Ethereum obtenido de la caché:', this.ethereumPrice);
+      console.log("Fondos actuales:", this.convertedAmount);
     } else {
       console.log("Tiempo antes de la solicitud:", this.recargaCache);
     const url = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur';
@@ -36,6 +46,7 @@ export class DetallesProductoComponent implements OnInit {
       .subscribe(response => {
         this.stateService.setCacheRecargas(Date.now()); // Actualiza el tiempo de la última solicitud
         this.stateService.setEthereumPrice(response.ethereum.eur);
+        this.stateService.getFondosActuales();
       }, error => {
         console.error('Error al obtener el precio de Ethereum:', error);
       });
@@ -60,6 +71,7 @@ export class DetallesProductoComponent implements OnInit {
           console.log("Detalles del producto obtenidos.");
           this.setProducto(response);
           this.calcularTiempoRestante();
+          this.mostrarBotonPuja();
           this.intervaloTiempo = this.iniciarIntervalo();
         },
         error: error => 
@@ -80,7 +92,7 @@ export class DetallesProductoComponent implements OnInit {
     const diferenciaTiempo = fechaLimiteDate.getTime() - fechaActual.getTime();
 
     if (diferenciaTiempo <= 0) {
-      this.tiempoRestante = 'La puja ha finalizado';
+      this.tiempoRestante = 'La subasta ha finalizado';
       clearInterval(this.intervaloTiempo);
       return;
     }

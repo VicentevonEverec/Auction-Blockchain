@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { StateService } from '../../status-service.service';
 
 @Component({
   selector: 'app-productos',
@@ -13,11 +14,12 @@ export class ProductosComponent implements OnInit {
       fechaInicioSubasta: string, fechaFinalSubasta: string,
        estadoSubasta: string, imagenProducto: string}[] = [];
 
-  constructor(private http: HttpClient, private router : Router) { }
+  constructor(private http: HttpClient, private router : Router, private stateService : StateService) { }
 
   ngOnInit(): void {
     this.listaProductos = [];
     console.log("Obteniendo lista de productos...");
+    this.stateService.setFondosActuales();
     // Llamada a la API para obtener la lista de productos
     this.http.get<any[]>('/productos/listaProductos', { responseType: 'json' })
       .subscribe({

@@ -12,7 +12,7 @@
             <div class="product-card">
                 <p class="temporizador"><strong>Tiempo restante </strong>
                 <br>
-                    <span [ngClass]="{'red-text': tiempoRestante === 'La puja ha finalizado'}">
+                    <span [ngClass]="{'red-text': tiempoRestante === 'La subasta ha finalizado'}">
                     {{ tiempoRestante }}</span></p>
                 <h2>{{ producto.nombre }}</h2>
                 <br>
@@ -35,6 +35,18 @@
                         {{ producto.estadoSubasta }}
                      </span>
                     </p>
+                    <button *ngIf="fondosSuficientes && producto.estadoSubasta === 'En Subasta'; else noFondos">Pujar</button>
+                    <ng-template #noFondos>
+                        <ng-container *ngIf="producto.estadoSubasta === 'Finalizado'">
+                            <p style="color: red; font-weight: bold;">La subasta ha finalizado</p>
+                        </ng-container>
+                        <ng-container *ngIf="producto.estadoSubasta === 'Proximamente'">
+                            <p style="color: blue; font-weight: bold;">La subasta se realizará próximamente</p>
+                        </ng-container>
+                        <ng-container *ngIf="producto.estadoSubasta !== 'Finalizado'">
+                            <p style="color: red; font-weight: bold;">No tienes fondos suficientes para pujar</p>
+                        </ng-container>
+                    </ng-template>
                 </div>
                 </div>
             </div>

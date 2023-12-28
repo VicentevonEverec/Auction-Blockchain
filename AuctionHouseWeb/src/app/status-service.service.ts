@@ -2,12 +2,43 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
 
+import { ethers } from 'ethers';
+
 @Injectable({
   providedIn: 'root',
 })
 
 export class StateService 
 {
+
+  async setFondosActuales() {
+    try { 
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const balance = await provider.getBalance(this.getAccount());
+
+      const ethereumAmount = parseFloat(ethers.utils.formatEther(balance));
+      var ethereumPrice = this.getEthereumPrice();
+
+      if (ethereumPrice !== null && ethereumPrice !== 0) {
+        var convertedAmount = ethereumAmount * ethereumPrice;
+        localStorage.setItem('convertedAmount', convertedAmount.toString())
+      }
+    } catch (error) {
+      console.error('El saldo actual de esta cartera es 0.');
+    }
+  }
+
+  getFondosActuales() {
+    const fondosActuales = localStorage.getItem('convertedAmount');
+    if (fondosActuales !== null) {
+      const fondos = parseFloat(fondosActuales);
+      console.log('Fondos actuales:', fondos);
+      return fondos;
+    } else {
+      console.log('El valor de los fondos actuales en localStorage es nulo.');
+      return 0;
+    } 
+  }
 
   setEthereumPrice(price: number) { localStorage.setItem('ethereumPrice', price.toString()) }
 
