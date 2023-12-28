@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StateService } from '../status-service.service';
+import { StateService } from '../../status-service.service';
 
 import { HttpClient } from '@angular/common/http';
 

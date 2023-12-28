@@ -34,9 +34,9 @@ public class ProductosController {
         return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Productos> getProductoById(@PathVariable Long id) {
-        Productos producto = productosService.getProductoById(id);
+    @GetMapping("/detallesProducto/{id}")
+    public ResponseEntity<ProductoDto> getProductoById(@PathVariable Long id) {
+        ProductoDto producto = databaseService.obtenerProductoPorId(id);
         return producto != null ? new ResponseEntity<>(producto, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

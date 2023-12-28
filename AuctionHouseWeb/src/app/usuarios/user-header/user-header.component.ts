@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ethers } from 'ethers';
 import { HttpClient } from '@angular/common/http';
 
-import { StateService } from '../status-service.service';
+import { StateService } from '../../status-service.service';
 
 @Component({
   selector: 'app-user-header',

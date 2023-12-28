@@ -16,18 +16,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { FormsModule } from '@angular/forms';
 
-import { SearchFilterComponent } from './search-filter/search-filter.component';
-import { UserHeaderComponent } from './user-header/user-header.component';
+import { SearchFilterComponent } from './usuarios/search-filter/search-filter.component';
+import { UserHeaderComponent } from './usuarios/user-header/user-header.component';
 import { HowToSellComponent } from './how-to-sell/how-to-sell.component';
-import { RegisterComponent } from './register/register.component';
-import { ProfileComponent } from './profile/profile.component';
-import { WalletHistoryComponent } from './wallet-history/wallet-history.component';
-import { WalletManagementComponent } from './wallet-management/wallet-management.component';
-import { AddWalletComponent } from './add-wallet/add-wallet.component';
-import { DeleteWalletComponent } from './delete-wallet/delete-wallet.component';
-import { ChangeWalletComponent } from './change-wallet/change-wallet.component';
+import { RegisterComponent } from './usuarios/register/register.component';
+import { ProfileComponent } from './usuarios/profile/profile.component';
+import { WalletHistoryComponent } from './usuarios/wallet-history/wallet-history.component';
+import { WalletManagementComponent } from './usuarios/wallet-management/wallet-management.component';
+import { AddWalletComponent } from './usuarios/add-wallet/add-wallet.component';
+import { DeleteWalletComponent } from './usuarios/delete-wallet/delete-wallet.component';
+import { ChangeWalletComponent } from './usuarios/change-wallet/change-wallet.component';
 
 import { BackArrowComponent } from 'src/componentes/back-arrow/back-arrow';
+import { SubastasComponent } from './subastas/subastas.component';
+import { ProductosComponent } from './productos/listado-productos/productos.component';
+import { DetallesProductoComponent } from './productos/detalles-producto/detalles-producto/detalles-producto.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,10 @@ import { BackArrowComponent } from 'src/componentes/back-arrow/back-arrow';
     AddWalletComponent,
     DeleteWalletComponent,
     ChangeWalletComponent,
-    BackArrowComponent
+    BackArrowComponent,
+    SubastasComponent,
+    ProductosComponent,
+    DetallesProductoComponent
   ],
   imports: [
     BrowserModule,

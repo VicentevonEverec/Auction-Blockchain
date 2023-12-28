@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ethers } from 'ethers';
 
-import { StateService } from '../status-service.service';
+import { StateService } from '../../status-service.service';
 
 @Component({
   selector: 'app-add-wallet',

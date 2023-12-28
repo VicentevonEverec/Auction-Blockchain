@@ -10,4 +10,6 @@ public interface IDatabaseService {
     public String checkDatabaseConnection();
 
     public List<ProductoDto> obtenerProductos();
+
+    public ProductoDto obtenerProductoPorId(Long id);
 }

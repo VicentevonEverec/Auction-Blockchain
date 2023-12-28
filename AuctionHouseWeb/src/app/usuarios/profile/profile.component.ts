@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { StateService } from '../status-service.service';
+import { StateService } from '../../status-service.service';
 
 import { HttpClient } from '@angular/common/http';
 import { ethers } from 'ethers';

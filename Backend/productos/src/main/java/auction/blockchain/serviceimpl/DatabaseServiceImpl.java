@@ -53,5 +53,27 @@ public class DatabaseServiceImpl implements IDatabaseService {
         System.out.println("Productos obtenidos: " + productos);
         return productos;
     }
+
+    @Override
+    public ProductoDto obtenerProductoPorId(Long id) {
+        System.out.println("Obteniendo producto con id " + id + " de la base de datos...");
+        Productos producto = productosService.getProductoById(id);
+
+        if (producto != null) {
+            ProductoDto productoDto = new ProductoDto(
+                    producto.getId(), producto.getNombre(),
+                    producto.getDescripcion(), producto.getEstado(),
+                    producto.getCategoria(), producto.getPrecioInicial(),
+                    producto.getPrecioActual(), producto.getFechaInicioSubasta(),
+                    producto.getFechaFinalSubasta(), producto.getEstadoSubasta(),
+                    producto.getImagenProducto()
+            );
+            System.out.println("Producto obtenido: " + productoDto);
+            return productoDto;
+        } else {
+            System.out.println("Producto no encontrado");
+            return null;
+        }
+    }
 }
 
