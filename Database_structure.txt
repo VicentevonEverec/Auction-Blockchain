@@ -27,13 +27,16 @@ CREATE TABLE productos (
     Categoria VARCHAR(100),
     Precio_Inicial DECIMAL(10, 2),
     Precio_Actual DECIMAL(10, 2),
-    Fecha_Inicio_Subasta DATE,
-    Fecha_Final_Subasta DATE,
+    Fecha_Inicio_Subasta TIMESTAMP;
+    Fecha_Final_Subasta TIMESTAMP;
     ID_Vendedor BIGINT,
     ID_Comprador BIGINT,
     Estado_Subasta VARCHAR(50),
     Imagen_Producto VARCHAR(255)
 );
+
+ALTER TABLE productos
+ADD COLUMN Ultima_Puja TIMESTAMP;
 
 INSERT INTO productos (Nombre, Descripcion, Estado, Categoria, Precio_Inicial, Precio_Actual, Fecha_Inicio_Subasta, Fecha_Final_Subasta, Estado_Subasta, Imagen_Producto)
 VALUES

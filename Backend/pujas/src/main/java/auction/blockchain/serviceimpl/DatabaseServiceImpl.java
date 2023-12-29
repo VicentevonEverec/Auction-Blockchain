@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class DatabaseServiceImpl implements IDatabaseService {
 
@@ -20,6 +22,16 @@ public class DatabaseServiceImpl implements IDatabaseService {
         } catch (Exception e) {
             e.printStackTrace();
             return "Error al conectar con la base de datos";
+        }
+    }
+
+    @Override
+    public void actualizarPrecioProducto(String idProducto, String monto, Date fechaPuja) {
+        try {
+            jdbcTemplate.update("UPDATE productos SET Precio_Actual = ?, Ultima_Puja = ? WHERE ID_Producto = ?",
+                    monto, fechaPuja, idProducto);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

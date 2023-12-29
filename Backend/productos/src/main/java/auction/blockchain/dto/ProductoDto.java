@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 public class ProductoDto {
@@ -20,13 +19,15 @@ public class ProductoDto {
 
     private BigDecimal precioInicial;
     private BigDecimal precioActual;
-    private Date fechaInicioSubasta;
-    private Date fechaFinalSubasta;
+    private String fechaInicioSubasta;
+    private String fechaFinalSubasta;
     private String estadoSubasta;
     private String imagenProducto;
 
+    private String ultimaPuja;
+
     public ProductoDto(Long id, String nombre, String estado, BigDecimal precioInicial,
-                       BigDecimal precioActual, Date fechaInicioSubasta, Date fechaFinalSubasta,
+                       BigDecimal precioActual, String fechaInicioSubasta, String fechaFinalSubasta,
                        String estadoSubasta, String imagenProducto) {
         this.id = id;
         this.nombre = nombre;
@@ -40,8 +41,8 @@ public class ProductoDto {
     }
 
     public ProductoDto(Long id, String nombre, String descripcion, String estado, String categoria,
-                       BigDecimal precioInicial, BigDecimal precioActual, Date fechaInicioSubasta,
-                       Date fechaFinalSubasta, String estadoSubasta, String imagenProducto) {
+                       BigDecimal precioInicial, BigDecimal precioActual, String fechaInicioSubasta,
+                       String fechaFinalSubasta, String estadoSubasta, String imagenProducto) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;

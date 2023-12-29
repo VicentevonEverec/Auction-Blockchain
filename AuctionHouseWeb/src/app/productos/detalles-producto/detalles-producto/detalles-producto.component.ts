@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { StateService } from '../../../status-service.service';
-import { ethers } from 'ethers';
 
 @Component({
   selector: 'app-detalles-producto',
@@ -14,8 +13,8 @@ export class DetallesProductoComponent implements OnInit {
   producto = {
     id: "", nombre: "", descripcion: "",
      estado: "", categoria: "", precioInicial: 0, precioActual: 0,
-     fechaInicioSubasta: "", fechaFinalSubasta: "", estadoSubasta: "", imagenProducto: "",
-     precioEthInicial: 0, precioEthActual: 0
+     fechaInicioSubasta: "", fechaFinalSubasta: "", ultimaPuja: "", estadoSubasta: "", imagenProducto: "",
+     precioEthInicial: 0, precioEthActual: 0, ultimaPujaDate: "", fechaFinalString: ""
     };
 
   private intervaloTiempo: any;
@@ -38,7 +37,6 @@ export class DetallesProductoComponent implements OnInit {
     // Verifica si el precio está en caché y si el tiempo transcurrido desde la última solicitud es menor que el límite de la caché
     if (this.ethereumPrice !== null && this.recargaCache !== 0 && Date.now() - this.recargaCache < this.cacheDuration) {
       console.log('Precio de Ethereum obtenido de la caché:', this.ethereumPrice);
-      console.log("Fondos actuales:", this.convertedAmount);
     } else {
       console.log("Tiempo antes de la solicitud:", this.recargaCache);
     const url = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur';
@@ -50,31 +48,58 @@ export class DetallesProductoComponent implements OnInit {
       }, error => {
         console.error('Error al obtener el precio de Ethereum:', error);
       });
-    }
+    }this.intervaloTiempo
   }
 
   iniciarIntervalo(): void {
     this.intervaloTiempo = setInterval(() => {
       this.calcularTiempoRestante();
+      this.comprobarNuevasPujas();
     }, 1000); // Intervalo de actualización de 1 segundo
   }
   
+  comprobarNuevasPujas() {
+    if(this.producto.ultimaPujaDate != null && this.producto.ultimaPujaDate != "") {
+      const params = new HttpParams().set('ultimaFechaProducto', this.producto.ultimaPujaDate);
+      // Lógica para hacer la petición al backend y manejar la respuesta
+      this.http.get('/auction/nuevas-pujas/' + this.producto.id, { params })
+    .subscribe((response: any) => {
+      if (response) {
+        console.log("Nuevas pujas obtenidas.");
+        this.cargarDetallesProducto(this.producto.id);
+      } else {
+        console.log("No hay nuevas pujas.");
+      }
+    });
+  }
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
     const idProducto = params['id'];
     console.log("Obteniendo detalles del producto: " + idProducto);
     // Llamada a la API para obtener los detalles del producto
+    this.cargarDetallesProducto(idProducto);
+    this.calcularTiempoRestante();
+    this.iniciarIntervalo();
+    });
+  }
+
+  ngOnDestroy() {
+    // Detener el intervalo en el ngOnDestroy
+    clearInterval(this.intervaloTiempo);
+    console.log('Intervalo detenido.');
+  }
+
+  cargarDetallesProducto(idProducto: string): void {
     this.http.get<any[]>('/productos/detallesProducto/' + idProducto, { responseType: 'json' })
       .subscribe({
         next: response => {
           console.log("Detalles del producto obtenidos.");
           this.setProducto(response);
+          this.mostrarBotonPuja();
           // Establecemos un valor base para la puja
           this.numeroUsuario = this.producto.precioActual + 10;
-          this.calcularTiempoRestante();
-          this.mostrarBotonPuja();
-          this.intervaloTiempo = this.iniciarIntervalo();
         },
         error: error => 
         {
@@ -82,7 +107,6 @@ export class DetallesProductoComponent implements OnInit {
           window.alert("No se pudo recuperar la lista de productos."); // Manejo de error
         }
       });
-    });
   }
 
   numeroUsuario: number = 0;
@@ -111,7 +135,7 @@ export class DetallesProductoComponent implements OnInit {
 
   datosPuja = {
     monto: "",
-    idProducto: this.producto.id,
+    idProducto: "",
     walletUsuario: this.stateService.getAccount()
   };
 
@@ -121,15 +145,17 @@ export class DetallesProductoComponent implements OnInit {
     if (this.pujarConfirmado && this.validarCantidad()) {
       console.log("Realizando puja...");
       //Mostramos los datos de la puja
-      console.log("Monto: " + this.numeroUsuario);
-      console.log("Producto: " + this.producto.id);
+      this.datosPuja.monto = this.numeroUsuario.toString();
+      this.datosPuja.idProducto = this.producto.id;
+      console.log("Monto: " + this.datosPuja.monto);
+      console.log("Producto: " + this.datosPuja.idProducto);
       console.log("Wallet: " + this.stateService.getAccount());
 
       // Llamada a la API para obtener los detalles del producto
-      this.http.post('/auction/pujar', this.datosPuja)
+      this.http.post('/auction/pujar', this.datosPuja, { responseType: 'json' })
       .subscribe({
         next: response => {
-          console.log('Puja realizada con éxito', response);
+          console.log(response);
           // Manejar la respuesta si es necesario
         },
         error: error => {
@@ -143,7 +169,7 @@ export class DetallesProductoComponent implements OnInit {
   tiempoRestante: string = '';
 
   calcularTiempoRestante(): void {
-    const fechaLimiteDate = new Date(this.producto.fechaFinalSubasta);
+    const fechaLimiteDate = new Date(this.producto.fechaFinalString);
     const fechaActual = new Date();
 
     const diferenciaTiempo = fechaLimiteDate.getTime() - fechaActual.getTime();
@@ -217,7 +243,7 @@ export class DetallesProductoComponent implements OnInit {
   }
 
   setFechaInicioSubasta(fechaInicioSubasta: string): void {
-    this.producto.fechaInicioSubasta = fechaInicioSubasta.slice(0, 10);
+    this.producto.fechaInicioSubasta = new Date(fechaInicioSubasta).toLocaleDateString() + " " + new Date(fechaInicioSubasta).toLocaleTimeString();
   }
 
   getFechaFinalSubasta(): string {
@@ -225,7 +251,8 @@ export class DetallesProductoComponent implements OnInit {
   }
 
   setFechaFinalSubasta(fechaFinalSubasta: string): void {
-    this.producto.fechaFinalSubasta = fechaFinalSubasta.slice(0, 10);
+    this.producto.fechaFinalString = fechaFinalSubasta;
+    this.producto.fechaFinalSubasta = new Date(fechaFinalSubasta).toLocaleDateString() + " " + new Date(fechaFinalSubasta).toLocaleTimeString();
   }
 
   getEstadoSubasta(): string {
@@ -270,6 +297,27 @@ export class DetallesProductoComponent implements OnInit {
     this.producto.precioEthActual = precioEth  / this.ethereumPrice;
   }
 
+  getUltimaPuja(): string {
+    return this.producto.ultimaPuja;
+  }
+
+  setUltimaPuja(ultimaPuja: string): void {
+    if (ultimaPuja == null) {
+      this.producto.ultimaPuja = "No hay pujas, ¡Sé el primero en pujar!";
+      return;
+    } else {
+    this.producto.ultimaPujaDate = ultimaPuja;
+    this.producto.ultimaPuja = this.obtenerFechaUltimaPuja(ultimaPuja);
+    }
+  }
+
+  obtenerFechaUltimaPuja(ultimaPuja : string) {
+    if (ultimaPuja) {
+      return `Última puja el ${new Date(ultimaPuja).toLocaleDateString()} a las ${new Date(ultimaPuja).toLocaleTimeString()}`;
+    }
+    return 'Sin información de última puja'; // Mensaje por defecto si no hay datos
+  }
+
   setProducto(producto: any) {
     this.setId(producto.id);
     this.setNombre(producto.nombre);
@@ -284,6 +332,7 @@ export class DetallesProductoComponent implements OnInit {
     this.setImagenProducto(producto.imagenProducto);
     this.setPrecioEthInicial(producto.precioInicial);
     this.setPrecioEthActual(producto.precioActual);
+    this.setUltimaPuja(producto.ultimaPuja);
   }
 
 }

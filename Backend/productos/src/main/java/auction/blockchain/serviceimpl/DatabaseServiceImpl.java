@@ -44,8 +44,8 @@ public class DatabaseServiceImpl implements IDatabaseService {
                         rs.getString("Estado"),
                         rs.getBigDecimal("Precio_Inicial"),
                         rs.getBigDecimal("Precio_Actual"),
-                        rs.getDate("Fecha_Inicio_Subasta"),
-                        rs.getDate("Fecha_Final_Subasta"),
+                        rs.getString("Fecha_Inicio_Subasta"),
+                        rs.getString("Fecha_Final_Subasta"),
                         rs.getString("Estado_Subasta"),
                         rs.getString("Imagen_Producto")
                 )
@@ -64,10 +64,12 @@ public class DatabaseServiceImpl implements IDatabaseService {
                     producto.getId(), producto.getNombre(),
                     producto.getDescripcion(), producto.getEstado(),
                     producto.getCategoria(), producto.getPrecioInicial(),
-                    producto.getPrecioActual(), producto.getFechaInicioSubasta(),
-                    producto.getFechaFinalSubasta(), producto.getEstadoSubasta(),
+                    producto.getPrecioActual(), producto.getFechaInicioSubasta().toString(),
+                    producto.getFechaFinalSubasta().toString(), producto.getEstadoSubasta(),
                     producto.getImagenProducto()
             );
+
+            productoDto.setUltimaPuja(producto.getUltimaPuja() == null ? null : producto.getUltimaPuja().toString());
             System.out.println("Producto obtenido: " + productoDto);
             return productoDto;
         } else {

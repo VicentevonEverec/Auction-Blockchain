@@ -1,30 +1,34 @@
 package auction.blockchain.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 @Table(name = "pujas")
+@Data
 public class Pujas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_Puja")
     private Long id;
-
-    @Column(name = "user_dni")
-    private String usuarioDni;
 
     @Column(name = "ID_Producto")
     private Long idProducto;
 
-    @Column(name = "monto")
+    @Column(name = "ID_Usuario")
+    private Long idUsuario;
+
+    @Column(name = "Monto")
     private BigDecimal monto;
 
-    @Column(name = "fecha_puja")
+    @Column(name = "Fecha_Puja")
     private Date fechaPuja;
 
-    @Column(name = "wallet_address")
+    @Column(name = "Wallet_Address")
     private String walletAddress;
 
 }

@@ -51,4 +51,7 @@ public class Productos {
 
     @Column(name = "Imagen_Producto")
     private String imagenProducto;
+
+    @Column(name = "Ultima_Puja ")
+    private Date ultimaPuja;
 }
