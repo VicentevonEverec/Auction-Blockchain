@@ -70,6 +70,8 @@ export class DetallesProductoComponent implements OnInit {
         next: response => {
           console.log("Detalles del producto obtenidos.");
           this.setProducto(response);
+          // Establecemos un valor base para la puja
+          this.numeroUsuario = this.producto.precioActual + 10;
           this.calcularTiempoRestante();
           this.mostrarBotonPuja();
           this.intervaloTiempo = this.iniciarIntervalo();
@@ -81,6 +83,61 @@ export class DetallesProductoComponent implements OnInit {
         }
       });
     });
+  }
+
+  numeroUsuario: number = 0;
+
+  validarCantidad() : boolean {
+    if (this.numeroUsuario <= this.convertedAmount && this.numeroUsuario > this.producto.precioActual) {
+      return true;
+    } else if (this.numeroUsuario > this.convertedAmount) {
+      window.alert("No tienes suficientes fondos para realizar esta puja.");
+      return false;
+    } else {
+      window.alert("La cantidad introducida debe ser mayor que la puja actual.");
+      return false;
+    }
+  }
+
+  pujarConfirmado: boolean = false;
+
+  confirmarPuja(): void {
+    this.pujarConfirmado = confirm(`¿Quieres pujar la cantidad de ${this.numeroUsuario} EUR - ${(this.numeroUsuario / this.ethereumPrice).toFixed(5)} ETH?`);
+  }
+
+  pujarConCantidadMinima() {
+    this.pujarConCantidadEspecifica(this.producto.precioActual + 1);
+  }
+
+  datosPuja = {
+    monto: "",
+    idProducto: this.producto.id,
+    walletUsuario: this.stateService.getAccount()
+  };
+
+  pujarConCantidadEspecifica(cantidad: number) {
+    this.numeroUsuario = cantidad;
+    this.confirmarPuja();
+    if (this.pujarConfirmado && this.validarCantidad()) {
+      console.log("Realizando puja...");
+      //Mostramos los datos de la puja
+      console.log("Monto: " + this.numeroUsuario);
+      console.log("Producto: " + this.producto.id);
+      console.log("Wallet: " + this.stateService.getAccount());
+
+      // Llamada a la API para obtener los detalles del producto
+      this.http.post('/auction/pujar', this.datosPuja)
+      .subscribe({
+        next: response => {
+          console.log('Puja realizada con éxito', response);
+          // Manejar la respuesta si es necesario
+        },
+        error: error => {
+          console.error('Error al realizar la puja:', error);
+          window.alert('Hubo un error al realizar la puja.');
+        }
+    });
+    }
   }
 
   tiempoRestante: string = '';

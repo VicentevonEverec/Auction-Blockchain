@@ -6,5 +6,9 @@
   "/productos/": {
     "target": "http://localhost:8081",
     "secure": false
+  },
+  "/auction/": {
+    "target": "http://localhost:8082",
+    "secure": false
   }
 }

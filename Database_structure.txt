@@ -8,6 +8,9 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`,`dni`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+ALTER TABLE `user`
+ADD INDEX `idx_wallet_address` (`wallet_address`);
+
 CREATE TABLE `wallet_history` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_dni` VARCHAR(10) NOT NULL,
@@ -50,3 +53,15 @@ VALUES
     ('Lámpara Vintage', 'Lámpara de diseño retro con estilo vintage', 'Usado', 'Hogar', 350.00, 350.00, '2023-12-26', '2024-01-05', 'Finalizado', 'lampara_vintage.jpg'),
     ('Maleta de Viaje', 'Maleta resistente y espaciosa para viajes', 'Nuevo', 'Viajes', 200.00, 200.00, '2023-12-28', '2024-01-08', 'En Subasta', 'maleta_viaje.jpg'),
     ('Botella de Vino Antiguo', 'Botella de vino con añada especial', 'Usado', 'Alimentos y Bebidas', 1000.00, 1020.00, '2023-12-30', '2024-01-10', 'En Subasta', 'vino_antiguo.jpg');
+
+CREATE TABLE `pujas` (
+    `ID_Puja` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `ID_Producto` BIGINT,
+    `ID_Usuario` BIGINT,
+    `Monto` DECIMAL(10, 2),
+    `Fecha_Puja` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `Wallet_Address` VARCHAR(255),
+    CONSTRAINT `fk_puja_producto` FOREIGN KEY (`ID_Producto`) REFERENCES `productos`(`ID_Producto`),
+    CONSTRAINT `fk_puja_usuario` FOREIGN KEY (`ID_Usuario`) REFERENCES `user`(`id`),
+    CONSTRAINT `fk_puja_wallet` FOREIGN KEY (`Wallet_Address`) REFERENCES `user`(`wallet_address`)
+);

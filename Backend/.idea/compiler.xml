@@ -9,16 +9,19 @@
         <outputRelativeToContentRoot value="true" />
         <module name="user" />
         <module name="productos" />
+        <module name="pujas" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="productos" target="11" />
+      <module name="pujas" target="11" />
       <module name="user" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="productos" options="-parameters" />
+      <module name="pujas" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
   </component>

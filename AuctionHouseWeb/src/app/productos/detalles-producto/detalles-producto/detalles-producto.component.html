@@ -35,7 +35,16 @@
                         {{ producto.estadoSubasta }}
                      </span>
                     </p>
-                    <button *ngIf="fondosSuficientes && producto.estadoSubasta === 'En Subasta'; else noFondos">Pujar</button>
+                </div>
+                <div class="posicion-botones" *ngIf="fondosSuficientes && producto.estadoSubasta === 'En Subasta'; else noFondos">
+                    <button class="pujar" (click)="pujarConCantidadMinima()">Pujar con cantidad mínima</button>
+                  
+                    <!-- Formulario para pujar con una cantidad específica -->
+                    <form (ngSubmit)="pujarConCantidadEspecifica(numeroUsuario)">
+                      <input type="number" [(ngModel)]="numeroUsuario" name="cantidad" class="cantidad-input">
+                      <button class="pujar" type="submit">Pujar</button>
+                    </form>
+                  </div>
                     <ng-template #noFondos>
                         <ng-container *ngIf="producto.estadoSubasta === 'Finalizado'">
                             <p style="color: red; font-weight: bold;">La subasta ha finalizado</p>
@@ -47,7 +56,6 @@
                             <p style="color: red; font-weight: bold;">No tienes fondos suficientes para pujar</p>
                         </ng-container>
                     </ng-template>
-                </div>
                 </div>
             </div>
         </div>
