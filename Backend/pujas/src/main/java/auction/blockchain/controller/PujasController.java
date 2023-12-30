@@ -32,6 +32,7 @@ public class PujasController {
     public ResponseEntity<String> pujar(@RequestBody DatosPujaDto datosPujaDto) {
         // Mostramos los datos de la puja
         System.out.println("Monto: " + datosPujaDto.getMonto());
+        System.out.println("MontoEUR: " + datosPujaDto.getMontoEUR());
         System.out.println("IdProducto: " + datosPujaDto.getIdProducto());
         System.out.println("WalletUsuario: " + datosPujaDto.getWalletUsuario());
         String jsonResponse = "";
@@ -45,7 +46,7 @@ public class PujasController {
             pujasService.guardarPuja(datosPujaDto, idUsuario);
             // Una vez guardada la puja actualizamos el precio del producto
             databaseService.actualizarPrecioProducto(datosPujaDto.getIdProducto(), datosPujaDto.getMonto(),
-                    datosPujaDto.getFechaPuja());
+                    datosPujaDto.getMontoEUR(), datosPujaDto.getFechaPuja());
 
             jsonResponse = objectMapper.writeValueAsString("Puja guardada correctamente");
         } catch (Exception e) {

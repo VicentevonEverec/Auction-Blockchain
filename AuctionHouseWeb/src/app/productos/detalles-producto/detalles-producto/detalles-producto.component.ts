@@ -98,8 +98,8 @@ export class DetallesProductoComponent implements OnInit {
           console.log("Detalles del producto obtenidos.");
           this.setProducto(response);
           this.mostrarBotonPuja();
-          // Establecemos un valor base para la puja
-          this.numeroUsuario = this.producto.precioActual + 10;
+          // Establecemos un valor base para la puja en ETH
+          this.numeroUsuario = Number((this.producto.precioEthActual + 0.0001).toFixed(4));
         },
         error: error => 
         {
@@ -112,7 +112,7 @@ export class DetallesProductoComponent implements OnInit {
   numeroUsuario: number = 0;
 
   validarCantidad() : boolean {
-    if (this.numeroUsuario <= this.convertedAmount && this.numeroUsuario > this.producto.precioActual) {
+    if (this.numeroUsuario <= (this.convertedAmount / this.ethereumPrice) && this.numeroUsuario > this.producto.precioEthActual) {
       return true;
     } else if (this.numeroUsuario > this.convertedAmount) {
       window.alert("No tienes suficientes fondos para realizar esta puja.");
@@ -126,15 +126,16 @@ export class DetallesProductoComponent implements OnInit {
   pujarConfirmado: boolean = false;
 
   confirmarPuja(): void {
-    this.pujarConfirmado = confirm(`¿Quieres pujar la cantidad de ${this.numeroUsuario} EUR - ${(this.numeroUsuario / this.ethereumPrice).toFixed(5)} ETH?`);
+    this.pujarConfirmado = confirm(`¿Quieres pujar la cantidad de ${(this.numeroUsuario * this.ethereumPrice).toFixed(5)} EUR - ${(this.numeroUsuario).toFixed(5)} ETH?`);
   }
 
   pujarConCantidadMinima() {
-    this.pujarConCantidadEspecifica(this.producto.precioActual + 1);
+    this.pujarConCantidadEspecifica(this.producto.precioEthActual + 0.0001);
   }
 
   datosPuja = {
     monto: "",
+    montoEUR: "",
     idProducto: "",
     walletUsuario: this.stateService.getAccount()
   };
@@ -147,10 +148,12 @@ export class DetallesProductoComponent implements OnInit {
       //Mostramos los datos de la puja
       this.datosPuja.monto = this.numeroUsuario.toString();
       this.datosPuja.idProducto = this.producto.id;
+      this.datosPuja.montoEUR = (this.numeroUsuario * this.ethereumPrice).toFixed(5);
       console.log("Monto: " + this.datosPuja.monto);
+      console.log("Monto en EUR: " + this.datosPuja.montoEUR);
       console.log("Producto: " + this.datosPuja.idProducto);
       console.log("Wallet: " + this.stateService.getAccount());
-
+      
       // Llamada a la API para obtener los detalles del producto
       this.http.post('/auction/pujar', this.datosPuja, { responseType: 'json' })
       .subscribe({
@@ -284,7 +287,6 @@ export class DetallesProductoComponent implements OnInit {
   }
 
   setPrecioEthInicial(precioEth: number): void {
-    this.getEthereumPrice();
     this.producto.precioEthInicial = precioEth / this.ethereumPrice;
   }
 
@@ -293,7 +295,6 @@ export class DetallesProductoComponent implements OnInit {
   }
 
   setPrecioEthActual(precioEth: number): void {
-    this.getEthereumPrice();
     this.producto.precioEthActual = precioEth  / this.ethereumPrice;
   }
 

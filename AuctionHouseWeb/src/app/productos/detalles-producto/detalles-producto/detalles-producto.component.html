@@ -42,7 +42,7 @@
                   
                     <!-- Formulario para pujar con una cantidad específica -->
                     <form (ngSubmit)="pujarConCantidadEspecifica(numeroUsuario)">
-                      <input type="number" [(ngModel)]="numeroUsuario" name="cantidad" class="cantidad-input">
+                        <input type="number" [(ngModel)]="numeroUsuario" name="cantidad" class="cantidad-input" step="0.0001">
                       <button class="pujar" type="submit">Pujar</button>
                     </form>
                   </div>

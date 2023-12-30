@@ -61,7 +61,7 @@ CREATE TABLE `pujas` (
     `ID_Puja` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `ID_Producto` BIGINT,
     `ID_Usuario` BIGINT,
-    `Monto` DECIMAL(10, 2),
+    `Monto` DECIMAL(10, 6),
     `Fecha_Puja` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `Wallet_Address` VARCHAR(255),
     CONSTRAINT `fk_puja_producto` FOREIGN KEY (`ID_Producto`) REFERENCES `productos`(`ID_Producto`),

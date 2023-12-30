@@ -26,10 +26,10 @@ public class DatabaseServiceImpl implements IDatabaseService {
     }
 
     @Override
-    public void actualizarPrecioProducto(String idProducto, String monto, Date fechaPuja) {
+    public void actualizarPrecioProducto(String idProducto, String monto, String montoEUR, Date fechaPuja) {
         try {
             jdbcTemplate.update("UPDATE productos SET Precio_Actual = ?, Ultima_Puja = ? WHERE ID_Producto = ?",
-                    monto, fechaPuja, idProducto);
+                    montoEUR, fechaPuja, idProducto);
         } catch (Exception e) {
             e.printStackTrace();
         }
