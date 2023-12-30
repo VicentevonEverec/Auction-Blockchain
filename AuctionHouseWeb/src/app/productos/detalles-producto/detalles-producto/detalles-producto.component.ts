@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { StateService } from '../../../status-service.service';
+import { ethers, BigNumber  } from 'ethers';
 
 @Component({
   selector: 'app-detalles-producto',
@@ -123,10 +124,13 @@ export class DetallesProductoComponent implements OnInit {
     }
   }
 
-  pujarConfirmado: boolean = false;
+  // Inicializamos pujarConfirmado como una promesa de tipo booleano en false
+  pujarConfirmado: Promise<boolean> | false = false;
 
   confirmarPuja(): void {
-    this.pujarConfirmado = confirm(`¿Quieres pujar la cantidad de ${(this.numeroUsuario * this.ethereumPrice).toFixed(5)} EUR - ${(this.numeroUsuario).toFixed(5)} ETH?`);
+    if (confirm(`¿Quieres pujar la cantidad de ${(this.numeroUsuario * this.ethereumPrice).toFixed(5)} EUR - ${(this.numeroUsuario).toFixed(5)} ETH?`)) {
+      this.pujarConfirmado = this.pujar();
+    }
   }
 
   pujarConCantidadMinima() {
@@ -143,12 +147,10 @@ export class DetallesProductoComponent implements OnInit {
   pujarConCantidadEspecifica(cantidad: number) {
     this.numeroUsuario = cantidad;
     this.confirmarPuja();
+
     if (this.pujarConfirmado && this.validarCantidad()) {
+      console.log("Puja confirmada.");
       console.log("Realizando puja...");
-      //Mostramos los datos de la puja
-      this.datosPuja.monto = this.numeroUsuario.toString();
-      this.datosPuja.idProducto = this.producto.id;
-      this.datosPuja.montoEUR = (this.numeroUsuario * this.ethereumPrice).toFixed(5);
       console.log("Monto: " + this.datosPuja.monto);
       console.log("Monto en EUR: " + this.datosPuja.montoEUR);
       console.log("Producto: " + this.datosPuja.idProducto);
@@ -166,6 +168,8 @@ export class DetallesProductoComponent implements OnInit {
           window.alert('Hubo un error al realizar la puja.');
         }
     });
+    } else {
+      console.log("Puja cancelada.");
     }
   }
 
@@ -334,6 +338,62 @@ export class DetallesProductoComponent implements OnInit {
     this.setPrecioEthInicial(producto.precioInicial);
     this.setPrecioEthActual(producto.precioActual);
     this.setUltimaPuja(producto.ultimaPuja);
+  }
+
+  async pujar() : Promise<boolean> {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+
+        const contractAddress = "0xB6c0D95bB2e5cbc53007e045D5Cd688146f45507";
+        const abi = ["function pujarPorProducto(uint256 idProducto, uint256 monto, uint256 montoEUR, uint256 saldo) public payable"];
+
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+
+        // Establecemos el precio de la puja en ETH a 0.00001
+        const precioPuja = ethers.utils.parseEther('0.00001');
+
+        //Mostramos los datos de la puja
+        this.datosPuja.monto = this.numeroUsuario.toString();
+        this.datosPuja.idProducto = this.producto.id;
+        this.datosPuja.montoEUR = (this.numeroUsuario * this.ethereumPrice).toString();
+
+        // Convertimos en bigNumber el valor de la puja
+        const puja = ethers.utils.parseEther(this.datosPuja.monto);
+
+        // Convertimos los EUR a Wei
+        const pujaEURWei = ethers.utils.parseEther(this.datosPuja.montoEUR);
+
+        // Convertimos la puja de ETH a EUR
+        const pujaEUR = ethers.BigNumber.from(pujaEURWei);
+
+        const transaction = await contract['pujarPorProducto'](
+          this.datosPuja.idProducto,
+          puja,
+          pujaEUR,
+          provider.getBalance(this.stateService.getAccount()),
+        {
+          value: precioPuja,
+          from: this.stateService.getAccount()
+        });
+
+
+        await transaction.wait();
+        console.log('Puja realizada exitosamente');
+
+        // PROBLEMA, NO SE COMPRUEBA SI SE HA REALIZADO O NO LA PUJA Y POR LO TANTO
+        // SI SE RECHAZA PROSIGUE ¿CÓMO SE SOLUCIONA?
+
+        return true;
+      } catch (error) {
+        console.error('Error al realizar la puja:', error);
+      }
+    } else {
+      console.error('MetaMask u otra billetera no detectada');
+    }
+
+    return false;
   }
 
 }
