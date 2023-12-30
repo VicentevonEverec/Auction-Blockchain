@@ -54,7 +54,7 @@
                         <ng-container *ngIf="producto.estadoSubasta === 'Proximamente'">
                             <p style="color: blue; font-weight: bold;">La subasta se realizará próximamente</p>
                         </ng-container>
-                        <ng-container *ngIf="producto.estadoSubasta !== 'Finalizado'">
+                        <ng-container *ngIf="!fondosSuficientes">
                             <p style="color: red; font-weight: bold;">No tienes fondos suficientes para pujar</p>
                         </ng-container>
                     </ng-template>

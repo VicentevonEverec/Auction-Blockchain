@@ -34,5 +34,16 @@ public class DatabaseServiceImpl implements IDatabaseService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Long obtenerIdUsuario(String walletUsuario) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT id FROM user WHERE wallet_address = ?",
+                    new Object[]{walletUsuario}, Long.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
 

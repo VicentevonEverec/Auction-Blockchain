@@ -18,9 +18,11 @@ public class PujasServiceImpl implements IPujasService {
     private IPujasDao pujasDao;
 
     @Override
-    public void guardarPuja(DatosPujaDto datosPujaDto) {
+    public void guardarPuja(DatosPujaDto datosPujaDto, Long idUsuario) {
         // Creamos la puja
         Pujas puja = new Pujas();
+
+        puja.setIdUsuario(idUsuario);
 
         // Convertimos el String a BigDecimal para asignarlo a la puja
         puja.setMonto(new BigDecimal(datosPujaDto.getMonto()));

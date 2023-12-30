@@ -38,8 +38,11 @@ public class PujasController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
+            // Obtenemos el id del usuario a través de su wallet
+            Long idUsuario = databaseService.obtenerIdUsuario(datosPujaDto.getWalletUsuario());
+
             // Llamamos al servicio para guardar la puja
-            pujasService.guardarPuja(datosPujaDto);
+            pujasService.guardarPuja(datosPujaDto, idUsuario);
             // Una vez guardada la puja actualizamos el precio del producto
             databaseService.actualizarPrecioProducto(datosPujaDto.getIdProducto(), datosPujaDto.getMonto(),
                     datosPujaDto.getFechaPuja());
