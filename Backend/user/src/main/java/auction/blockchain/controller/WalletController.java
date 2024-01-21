@@ -62,7 +62,7 @@ public class WalletController
 
         try {
             // Comprobamos si existe historial de carteras para el DNI
-            List<String> history = databaseServiceImpl.walletHistory(dni);
+            List<String> history = databaseServiceImpl.walletHistory(dni, walletAddress);
 
             if (history != null) {
                 System.out.println("Historial de carteras encontrado en la base de datos.");
@@ -104,13 +104,12 @@ public class WalletController
         if (databaseServiceImpl.checkWalletAddress(wallet.getWalletAddress()))
         {
             System.out.println("Dirección de cartera encontrada en la base de datos.");
-            return ResponseEntity.status(409).body("La dirección de cartera ya se encuentra añadida a tu cuenta."); // Código 409 para Conflict
+            databaseServiceImpl.reinsertWalletHistory(wallet.getWalletAddress(), idUsuario);
         } else {
-
             databaseServiceImpl.insertWalletHistory(wallet.getWalletAddress(), idUsuario);
-
-            return ResponseEntity.ok("Dirección de cartera añadida a la cuenta."); // Código 200 para OK
         }
+
+        return ResponseEntity.ok("Dirección de cartera añadida a la cuenta."); // Código 200 para OK
     }
 
     @PostMapping("/deleteWallet")

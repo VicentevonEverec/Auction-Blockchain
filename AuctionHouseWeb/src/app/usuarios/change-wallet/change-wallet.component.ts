@@ -38,35 +38,38 @@ export class ChangeWalletComponent {
         });
     }
 
-    changeWallet(wallet : string): void
-    {
+    changeWallet(wallet: string): void {
       const confirmacion = confirm("¿Estás seguro de que quieres que esta cartera sea tu principal?");
       if (!confirmacion) {
         this.router.navigate(['/wallet-management']);
+        return;
       }
-  
+    
       this.changeWalletInfo.walletAddress = wallet;
-
-      //Los datos que enviamos
+    
+      // Datos que enviamos
       console.log(this.changeWalletInfo.walletAddress);
-  
+    
       this.http.post('/api/changeWallet', this.changeWalletInfo, { responseType: 'text' })
-      .subscribe({
-        next: response => {
-          console.log('Cartera cambiada correctamente: ', response);
-          window.alert('Cartera cambiada correctamente: ' + response);
-          this.stateService.setWallet(this.changeWalletInfo.walletAddress);
-          // Recargar la página para que se actualice el historial de carteras
-          window.location.reload();
-        },
-        error: error => 
-        {
-          console.error('Error al cambiar la cartera: ', error);
-          window.alert('Error al cambiar la cartera: ' + error.error);
-        }
-      });
-  
+        .subscribe({
+          next: async response => {
+            console.log('Cartera cambiada correctamente: ', response);
+            window.alert('Cartera cambiada correctamente: ' + response);
+            this.stateService.setWallet(this.changeWalletInfo.walletAddress);
+    
+            // Indicar al usuario que cambie manualmente en Metamask
+            confirm("La cartera se ha cambiado correctamente. Por favor, cambie manualmente a la nueva cartera en Metamask.");
+    
+            // Recargar la página para que se actualice el historial de carteras
+            window.location.reload();
+          },
+          error: error => {
+            console.error('Error al cambiar la cartera: ', error);
+            window.alert('Error al cambiar la cartera: ' + error.error);
+          }
+        });
     }
+    
   
     isAutofillEnabled: boolean = false;
   

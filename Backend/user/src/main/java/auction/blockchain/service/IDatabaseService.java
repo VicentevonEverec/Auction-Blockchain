@@ -15,7 +15,7 @@ public interface IDatabaseService {
 
     public String dniAsociado(String walletAddress);
 
-    public List<String> walletHistory(String dni) ;
+    public List<String> walletHistory(String dni, String walletAddress);
 
     public String insertWalletHistory(String walletAddress, String dni);
 
@@ -25,4 +25,5 @@ public interface IDatabaseService {
 
     public String changeCurrentWallet(String currentWalletAddress, String newWalletAddress, String dni);
 
+    public String reinsertWalletHistory(String walletAddress, String dni);
 }

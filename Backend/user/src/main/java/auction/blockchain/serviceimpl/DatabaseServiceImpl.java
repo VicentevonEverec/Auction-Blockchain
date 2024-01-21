@@ -106,11 +106,12 @@ public class DatabaseServiceImpl implements IDatabaseService {
     }
 
     @Override
-    public List<String> walletHistory(String dni) {
+    public List<String> walletHistory(String dni, String walletAddress) {
         try {
             List<String> walletHistory = jdbcTemplate.query(
-                    "SELECT wallet_address FROM wallet_history WHERE user_dni = ?",
-                    (resultSet, rowNum) -> resultSet.getString("wallet_address"), dni);
+                    "SELECT wallet_address FROM wallet_history WHERE user_dni = ?" +
+                            " AND wallet_address != ? AND carteraActiva = 1",
+                    (resultSet, rowNum) -> resultSet.getString("wallet_address"), dni, walletAddress);
 
             return walletHistory;
             }
@@ -155,7 +156,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
     public String deleteWalletHistory(String walletAddress, String dni)
     {
         try {
-            jdbcTemplate.update("DELETE FROM wallet_history WHERE wallet_address = ? AND user_dni = ?", walletAddress, dni);
+            jdbcTemplate.update("UPDATE wallet_history SET carteraActiva = false WHERE wallet_address = ? AND user_dni = ?", walletAddress, dni);
             return "Historial de carteras eliminado correctamente";
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,15 +168,24 @@ public class DatabaseServiceImpl implements IDatabaseService {
     public String changeCurrentWallet(String newWalletAddress, String currentWalletAddress, String dni)
     {
         try {
-            walletHistoryService.deleteByWalletAddressAndUserDni(newWalletAddress, dni);
-            walletHistoryService.insertWalletHistory(currentWalletAddress, dni);
-
             userService.updateWalletAddress(newWalletAddress, dni);
 
             return "Historial de carteras actualizado correctamente";
         } catch (Exception e) {
             e.printStackTrace();
             return "Error al realizar el cambio de cartera";
+        }
+    }
+
+    @Override
+    public String reinsertWalletHistory(String walletAddress, String dni)
+    {
+        try {
+            jdbcTemplate.update("UPDATE wallet_history SET carteraActiva = true WHERE wallet_address = ? AND user_dni = ?", walletAddress, dni);
+            return "Historial de carteras añadido correctamente";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error al eliminar el historial de carteras";
         }
     }
 }

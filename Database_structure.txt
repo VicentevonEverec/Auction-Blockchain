@@ -15,6 +15,7 @@ CREATE TABLE `wallet_history` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_dni` VARCHAR(10) NOT NULL,
   `wallet_address` VARCHAR(255) NOT NULL,
+  `carteraActiva` BOOLEAN NOT NULL DEFAULT TRUE,
   CONSTRAINT `unique_wallet_history` UNIQUE (`user_dni`, `wallet_address`),
   CONSTRAINT `fk_user_dni` FOREIGN KEY (`user_dni`) REFERENCES `user` (`dni`) ON DELETE CASCADE
 );
@@ -66,5 +67,5 @@ CREATE TABLE `pujas` (
     `Wallet_Address` VARCHAR(255),
     CONSTRAINT `fk_puja_producto` FOREIGN KEY (`ID_Producto`) REFERENCES `productos`(`ID_Producto`),
     CONSTRAINT `fk_puja_usuario` FOREIGN KEY (`ID_Usuario`) REFERENCES `user`(`id`),
-    CONSTRAINT `fk_puja_wallet` FOREIGN KEY (`Wallet_Address`) REFERENCES `user`(`wallet_address`)
+    CONSTRAINT `fk_puja_wallet` FOREIGN KEY (`Wallet_Address`) REFERENCES `wallet_history`(`wallet_address`)
 );

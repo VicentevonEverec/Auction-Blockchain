@@ -18,4 +18,7 @@ public class WalletHistory {
 
     @Column(name = "wallet_address")
     private String walletAddress;
+
+    @Column(name = "carteraActiva")
+    private boolean carteraActiva;
 }

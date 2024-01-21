@@ -11,7 +11,8 @@
         <h2>Historial de carteras</h2>
 
         <p><strong>Cartera actual:</strong> {{ currentWallet }}</p>
-        <strong>Carteras añadidas a esta cuenta:</strong> 
+        <p *ngIf="walletsWithValues.length == 0"><strong>No existen más carteras añadidas a esta cuenta.</strong></p>
+        <p *ngIf="walletsWithValues.length > 0"><strong>Carteras añadidas a esta cuenta:</strong></p>
             <div *ngIf="walletsWithValues.length > 0">
                 <ul>
                     <li *ngFor="let wallet of walletsWithValues">
